@@ -1,0 +1,13 @@
+{
+  "crons": [
+    {
+      "path": "/api/collect",
+      "schedule": "0 14 * * 0-4"
+    }
+  ],
+  "functions": {
+    "app/api/slack/events/route.ts": { "maxDuration": 60 },
+    "app/api/extra-brev/route.ts": { "maxDuration": 60 },
+    "app/api/collect/route.ts": { "maxDuration": 60 }
+  }
+}
