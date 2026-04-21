@@ -1,13 +1,27 @@
 // lib/supabase.ts
 // Supabase-klient (server-side, använder secret key)
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL!;
-const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY!;
+// Lazy-init: klienten skapas inte vid modulimport utan vid första anrop.
+// Förhindrar att Vercel-bygget kraschar om env-variabler saknas.
+let _supabase: SupabaseClient | null = null;
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_SECRET_KEY, {
-  auth: { persistSession: false },
+export function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    const url = process.env.SUPABASE_URL;
+    const key = process.env.SUPABASE_SECRET_KEY;
+    if (!url || !key) throw new Error('SUPABASE_URL och SUPABASE_SECRET_KEY måste sättas');
+    _supabase = createClient(url, key, { auth: { persistSession: false } });
+  }
+  return _supabase;
+}
+
+// Bakåtkompatibel export – används av ai.ts (lazy import)
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    return (getSupabase() as unknown as Record<string | symbol, unknown>)[prop];
+  },
 });
 
 // ─── Typer som matchar Supabase-tabellerna ───────────────────────────────────
