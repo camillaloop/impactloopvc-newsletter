@@ -7,6 +7,7 @@ import { fetchMostRead } from './analytics';
 import { generateIntro, generateSubjectLines, generateImpactSvepet, generateTocLabels, buildPreheader } from './ai';
 import { fetchNewsFeed } from './news-feed';
 import { fetchMeetups } from './sheets';
+import { fetchFundingRounds, buildFundingTableHtml } from './funding';
 import { buildPlaceholders } from './placeholders';
 import { getEditorForDate } from './editors';
 import { createDraft, getLatestPendingInstruction, markInstructionApplied } from './supabase';
@@ -71,7 +72,7 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
 
   // 2. Hämta mest läst från GA4 + nyhetsflöde parallellt
   console.log('[collect] Fetching GA4 data and news feed...');
-  const [mostRead, newsFeed, meetups] = await Promise.all([
+  const [mostRead, newsFeed, meetups, fundingRows] = await Promise.all([
     fetchMostRead().catch((e) => {
       console.warn('[collect] GA4 failed:', e.message);
       return [];
@@ -84,11 +85,15 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
       console.warn('[collect] Google Sheets failed:', e.message);
       return [];
     }),
+    fetchFundingRounds().catch((e) => {
+      console.warn('[collect] Funding rounds failed:', e.message);
+      return [];
+    }),
   ]);
 
   console.log('[collect] mostRead:', mostRead.length, 'articles');
-  console.log('[collect] meetups:', meetups.length);
-  const fundingText = ''; // Filled in manually in the dashboard
+  console.log('[collect] funding rows:', fundingRows.length);
+  const fundingText = buildFundingTableHtml(fundingRows);
 
   // 3. Generera AI-innehåll parallellt
   console.log('[collect] Generating AI content...');
