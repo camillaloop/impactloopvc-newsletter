@@ -91,7 +91,7 @@ export async function fetchSubjectExamples(): Promise<string[]> {
   try {
     const { supabase } = await import('./supabase');
     const { data } = await supabase
-      .from('subject_line_examples')
+      .from('vc_subject_line_examples')
       .select('subject_line, open_rate')
       .order('open_rate', { ascending: false })
       .limit(20);
