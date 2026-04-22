@@ -16,9 +16,9 @@ export interface Nyemission {
 /** Formaterar ett belopp i SEK till "1,8 milj kr" eller "2,3 mdr kr" */
 function formatSek(sek: number): string {
   if (sek >= 1_000_000_000) {
-    return (sek / 1_000_000_000).toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' mdr kr';
+    return (sek / 1_000_000_000).toLocaleString('en-GB', { maximumFractionDigits: 1 }) + 'bn SEK';
   }
-  return (sek / 1_000_000).toLocaleString('sv-SE', { maximumFractionDigits: 1 }) + ' milj kr';
+  return (sek / 1_000_000).toLocaleString('en-GB', { maximumFractionDigits: 1 }) + 'm SEK';
 }
 
 /** Hämtar de 5 senaste nyemissionerna och returnerar dem med pre-money */
@@ -26,7 +26,7 @@ export async function fetchNyemissioner(limit = 5): Promise<Nyemission[]> {
   try {
     const res = await fetch(LOOPDESK_URL, { cache: 'no-store' });
     if (!res.ok) {
-      console.warn(`[loopdesk] API svarade ${res.status}`);
+      console.warn(`[loopdesk] API responded ${res.status}`);
       return [];
     }
     const json = await res.json();
@@ -47,7 +47,7 @@ export async function fetchNyemissioner(limit = 5): Promise<Nyemission[]> {
       eventDate: item.eventDate,
     }));
   } catch (err) {
-    console.warn('[loopdesk] Kunde inte hämta nyemissioner:', err);
+    console.warn('[loopdesk] Could not fetch funding rounds:', err);
     return [];
   }
 }
@@ -59,7 +59,7 @@ export function buildFundingFromLoopdesk(items: Nyemission[]): string {
     .map((item) => {
       const amount = formatSek(item.amountSek);
       const preMoney = formatSek(item.valuationPreMoneySek);
-      return `<p>💰 <strong>${item.company}</strong> tar in ${amount} till värderingen ${preMoney}.</p>`;
+      return `<p>💰 <strong>${item.company}</strong> raises ${amount} at a pre-money valuation of ${preMoney}.</p>`;
     })
     .join('<p><br /></p>');
 }

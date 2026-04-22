@@ -113,7 +113,7 @@ body, #bodyTable { background-color: rgb(244, 244, 244); }
 <tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top">
 <table width="100%" style="border:0;border-collapse:separate"><tbody><tr>
 <td style="padding-left:24px;padding-right:24px;padding-top:24px;padding-bottom:12px" class="mceTextBlockContainer">
-<div class="mceText" style="width:100%"><p class="last-child"><span style="color:#e2baba;">JUST NU</span></p></div>
+<div class="mceText" style="width:100%"><p class="last-child"><span style="color:#e2baba;">JUST IN</span></p></div>
 </td></tr></tbody></table>
 </td></tr>
 
@@ -145,7 +145,7 @@ ${imageCaption ? `
 <div class="mceText" style="width:100%">
 <p><strong><span style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;">${ingressBlock}</span></strong></p>
 <p><br></p>
-<p class="last-child"><a href="${esc(url)}" target="_blank"><strong>Läs artikeln här –––&gt;</strong></a></p>
+<p class="last-child"><a href="${esc(url)}" target="_blank"><strong>Read the article here &ndash;&ndash;&ndash;&gt;</strong></a></p>
 </div>
 </td></tr></tbody></table>
 </td></tr>
@@ -162,12 +162,12 @@ ${imageCaption ? `
 <table width="100%" style="border:0;background-color:#EAEAEA;border-collapse:separate"><tbody><tr>
 <td style="padding-left:24px;padding-right:24px;padding-top:28px;padding-bottom:28px" class="mceTextBlockContainer">
 <div class="mceText" style="width:100%">
-<h1>Detta är Impact Loop</h1>
-<p><br>Vi är ett nytt, fristående mediehus som varje dag håller 22 000+ impact-entreprenörer, investerare och ledare i Sverige och resten av Europa i loopen kring vad som händer inom impact. <a href="https://www.impactloop.se/om-oss" target="_blank">Läs mer om vilka vi är och varför vi finns här</a>.</p>
+<h1>Join Europe's leading impact investors</h1>
+<p><br>Impact Loop is your go-to business news platform for investors (and founders) in the European impact space.</p>
 <p><br></p>
-<p>Nyhetsbrevet är gratis att läsa – men vill du läsa all vår journalistik och även gå på våra meetups – <a href="https://www.impactloop.se/pris" target="_blank"><strong>uppgradera ditt medlemskap här!</strong></a></p>
+<p>👉 <a href="https://www.impactloop.com/subscribe" target="_blank"><strong>Subscribe to our paid plan</strong></a> to get unlimited access to all of our journalism.</p>
 <p><br></p>
-<p class="last-child">📬 Kontakta oss! Maila oss på <strong>fornamn@loop.se</strong>.</p>
+<p class="last-child">Got a news tip or want to get to know us more? <a href="mailto:sion@loop.se" target="_blank"><strong>Contact us here!</strong></a></p>
 </div>
 </td></tr></tbody></table>
 </td></tr>

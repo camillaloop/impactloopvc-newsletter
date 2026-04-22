@@ -29,7 +29,7 @@ async function generateExtraSubject(title: string, ingress: string): Promise<{ s
 
   const examples = await fetchSubjectExamples();
   const examplesBlock = examples.length > 0
-    ? `\nHär är de ${examples.length} bäst presterande ämnesraderna från Impact Loops historik (öppningsfrekvens | ämnesrad):\n${examples.join('\n')}\n\nStudera mönstren: emoji i början, konkreta siffror, citat med spänning, namngivna bolag/personer, kontrast/konflikt, max ~65 tecken.\n`
+    ? `\nHere are the ${examples.length} best-performing subject lines from Impact Loop's history (open rate | subject line):\n${examples.join('\n')}\n\nStudy the patterns: emoji at the start, concrete figures, tension-filled quotes, named companies/individuals, contrast/conflict, max ~65 characters.\n`
     : '';
 
   const msg = await client.messages.create({
@@ -37,32 +37,32 @@ async function generateExtraSubject(title: string, ingress: string): Promise<{ s
     max_tokens: 150,
     messages: [{
       role: 'user',
-      content: `Du skriver en ämnesrad och en preheader för ett extra nyhetsbrev från Impact Loop.
+      content: `You write a subject line and a preheader for an extra newsletter from Impact Loop VC.
 ${examplesBlock}
-Artikel:
-Rubrik: ${title}
-Ingress: ${ingress}
+Article:
+Headline: ${title}
+Summary: ${ingress}
 
-Ämnesraden ska utgå DIREKT från artikelrubriken – plocka ut den mest slagkraftiga frasen eller citatet ur rubriken och lägg en emoji framför. Förkorta och skärp vid behov men håll dig till rubrikens ord och känsla.
+The subject line should come DIRECTLY from the article headline – pick out the most compelling phrase or quote from the headline and add an emoji in front. Shorten and sharpen as needed, but stay true to the headline's words and feel.
 
-Exempel:
-- Rubrik: "Lars Dahmén: Sluta kritisera alla kolkrediter – här är ett projekt som faktiskt fungerar"
-  → Ämnesrad: 🌿 "Sluta kritisera alla kolkrediter"
-- Rubrik: "Wallenberg-veteranen uppmanar fler att investera i impact: 'Definitivt'"
-  → Ämnesrad: 💰 Wallenberg-veteranen: "Definitivt"
+Examples:
+- Headline: "Exclusive: Former Eurazeo CEO targets over €500m for European climate fund"
+  → Subject line: 💰 "Former Eurazeo CEO targets €500m+ climate fund"
+- Headline: "Patient capital for impact: 26 foundations actively investing in VCs"
+  → Subject line: 🌱 26 foundations backing impact VCs
 
-Regler:
-1. Ämnesrad: börja med emoji, max 60 tecken, hämta fras/citat direkt ur rubriken
-2. Preheader: fungerar som nedryckare – ta en ANNAN vinkel från ingress/rubrik, tillför ny info. Max 80 tecken, ingen emoji.
+Rules:
+1. Subject line: start with emoji, max 60 characters, take phrase/quote directly from the headline
+2. Preheader: acts as a subheading – take a DIFFERENT angle from the summary/headline, add new information. Max 80 characters, no emoji.
 
-Svara ENBART i detta format, utan förklaring:
-ÄMNESRAD: [ämnesraden]
-PREHEADER: [preheadern]`,
+Reply ONLY in this format, without explanation:
+SUBJECT: [subject line]
+PREHEADER: [preheader]`,
     }],
   });
 
   const text = msg.content[0].type === 'text' ? msg.content[0].text : '';
-  const subjectMatch = text.match(/ÄMNESRAD:\s*(.+)/);
+  const subjectMatch = text.match(/SUBJECT:\s*(.+)/);
   const previewMatch = text.match(/PREHEADER:\s*(.+)/);
 
   return {
@@ -83,7 +83,7 @@ export async function createExtraBrev(titleFragment: string): Promise<ExtraBrevR
   // 1. Sök artikel i Sanity
   const results = await searchArticles(titleFragment, 5);
   if (!results.length) {
-    throw new Error(`Ingen artikel hittades för "${titleFragment}"`);
+    throw new Error(`No article found for "${titleFragment}"`);
   }
 
   const article = results[0];
@@ -94,7 +94,7 @@ export async function createExtraBrev(titleFragment: string): Promise<ExtraBrevR
   });
 
   if (!article.url) {
-    throw new Error('Artikel saknar URL');
+    throw new Error('Article has no URL');
   }
 
   // 2. Generera ämnesrad och preheader
@@ -116,7 +116,7 @@ export async function createExtraBrev(titleFragment: string): Promise<ExtraBrevR
   const minHtml = html.replace(/\s+/g, ' ').replace(/>\s+</g, '><').trim();
 
   // 4. Skapa Mailchimp-kampanj
-  const dateStr = new Date().toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' });
+  const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   const campaign = await mcFetch('/campaigns', {
     method: 'POST',
     body: JSON.stringify({
@@ -126,7 +126,7 @@ export async function createExtraBrev(titleFragment: string): Promise<ExtraBrevR
         subject_line: subject,
         preview_text: preview,
         title: `EXTRA ${dateStr}`,
-        from_name: 'Impact Loop',
+        from_name: 'Impact Loop VC',
         reply_to: 'info@loop.se',
         auto_footer: false,
       },

@@ -6,7 +6,6 @@ import { fetchNewsletterArticles, fetchArticlesByIds } from './sanity';
 import { fetchMostRead } from './analytics';
 import { generateIntro, generateSubjectLines, generateImpactSvepet, generateTocLabels, buildPreheader } from './ai';
 import { fetchNewsFeed } from './news-feed';
-import { fetchNyemissioner, buildFundingFromLoopdesk } from './loopdesk';
 import { fetchMeetups } from './sheets';
 import { buildPlaceholders } from './placeholders';
 import { getEditorForDate } from './editors';
@@ -27,7 +26,7 @@ export interface CollectResult {
 // mode: 'auto' = schemalagt/automatiskt (ignorerar pending instructions)
 //       'manual' = använd pending instruction från Slack
 export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<CollectResult> {
-  console.log('[collect] Startar datainsamling, mode:', mode);
+  console.log('[collect] Starting data collection, mode:', mode);
 
   const today = new Date();
 
@@ -38,14 +37,14 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
   // 0. Kolla om det finns en pending Slack-instruktion (bara i manual-läge)
   const pendingInstruction = mode === 'manual' ? await getLatestPendingInstruction() : null;
   if (pendingInstruction) {
-    console.log('[collect] Hittade pending instruction:', pendingInstruction.raw_text);
+    console.log('[collect] Found pending instruction:', pendingInstruction.raw_text);
   }
 
   // Redaktör: pending instruction > roteringsschema (imorgondagens redaktör)
   const editor = pendingInstruction?.editor_override ?? getEditorForDate(tomorrow);
 
   // 1. Hämta artiklar från Sanity
-  console.log('[collect] Hämtar Sanity-artiklar...');
+  console.log('[collect] Fetching Sanity articles...');
   let articles = await fetchNewsletterArticles();
 
   // Om pending instruction anger specifika artiklar, ersätt med dem
@@ -60,29 +59,25 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
       } else {
         articles = instructedArticles.slice(0, 4);
       }
-      console.log('[collect] Artiklar från Slack-instruktion:', articles.map((a) => a.title));
+      console.log('[collect] Articles from Slack instruction:', articles.map((a) => a.title));
     }
   }
 
   if (articles.length < 2) {
-    throw new Error('Inte tillräckligt med artiklar flaggade för nyhetsbrev (behöver minst 2)');
+    throw new Error('Not enough articles flagged for newsletter (need at least 2)');
   }
 
   const [article1, article2, article3, article4] = articles;
 
   // 2. Hämta mest läst från GA4 + nyhetsflöde parallellt
-  console.log('[collect] Hämtar GA4-data och nyhetsflöde...');
-  const [mostRead, newsFeed, nyemissioner, meetups] = await Promise.all([
+  console.log('[collect] Fetching GA4 data and news feed...');
+  const [mostRead, newsFeed, meetups] = await Promise.all([
     fetchMostRead().catch((e) => {
       console.warn('[collect] GA4 failed:', e.message);
       return [];
     }),
     fetchNewsFeed().catch((e) => {
-      console.warn('[collect] Nyhetsflöde failed:', e.message);
-      return [];
-    }),
-    fetchNyemissioner(5).catch((e) => {
-      console.warn('[collect] Loopdesk failed:', e.message);
+      console.warn('[collect] News feed failed:', e.message);
       return [];
     }),
     fetchMeetups().catch((e) => {
@@ -91,12 +86,12 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
     }),
   ]);
 
-  console.log('[collect] mostRead:', mostRead.length, 'artiklar');
+  console.log('[collect] mostRead:', mostRead.length, 'articles');
   console.log('[collect] meetups:', meetups.length);
-  const fundingText = buildFundingFromLoopdesk(nyemissioner);
+  const fundingText = ''; // Filled in manually in the dashboard
 
   // 3. Generera AI-innehåll parallellt
-  console.log('[collect] Genererar AI-innehåll...');
+  console.log('[collect] Generating AI content...');
   const [intro, subjectOptions, svepet, tocLabels] = await Promise.all([
     generateIntro(articles.slice(0, 2), editor.name),
     generateSubjectLines(articles.slice(0, 2)),
@@ -141,7 +136,7 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
   const placeholders = buildPlaceholders(draftData);
 
   // 6. Spara i Supabase
-  console.log('[collect] Sparar utkast i Supabase...');
+  console.log('[collect] Saving draft in Supabase...');
   const draft = await createDraft({
     date: today.toISOString().split('T')[0],
     status: 'draft',
@@ -165,14 +160,14 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
   // 7. Markera pending instruction som tillämpad
   if (pendingInstruction) {
     await markInstructionApplied(pendingInstruction.id);
-    console.log('[collect] Pending instruction markerad som tillämpad.');
+    console.log('[collect] Pending instruction marked as applied.');
   }
 
   // 8. Skicka Slack-notis
   const dashboardUrl = `${BASE_URL}/dashboard?draft=${draft.id}`;
   await sendSlackNotification(editor.name, dashboardUrl, articles[0].title);
 
-  console.log(`[collect] Klar! Draft ID: ${draft.id}`);
+  console.log(`[collect] Done! Draft ID: ${draft.id}`);
   return { draftId: draft.id, dashboardUrl };
 }
 
@@ -182,18 +177,18 @@ async function sendSlackNotification(
   firstArticleTitle: string
 ): Promise<void> {
   if (!SLACK_WEBHOOK_URL) {
-    console.warn('[collect] SLACK_WEBHOOK_URL saknas – skippar Slack-notis');
+    console.warn('[collect] SLACK_WEBHOOK_URL missing – skipping Slack notification');
     return;
   }
 
   const payload = {
-    text: `📬 *Nyhetsbrevet är klart för granskning!*`,
+    text: `📬 *Newsletter ready for review!*`,
     blocks: [
       {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `📬 *Nyhetsbrevet är klart för granskning!*\n\n*Redaktör idag:* ${editorName}\n*Toppnyhet:* ${firstArticleTitle}`,
+          text: `📬 *Newsletter ready for review!*\n\n*Today's editor:* ${editorName}\n*Lead story:* ${firstArticleTitle}`,
         },
       },
       {
@@ -201,7 +196,7 @@ async function sendSlackNotification(
         elements: [
           {
             type: 'button',
-            text: { type: 'plain_text', text: '✏️ Granska och godkänn' },
+            text: { type: 'plain_text', text: '✏️ Review and approve' },
             url: dashboardUrl,
             style: 'primary',
           },

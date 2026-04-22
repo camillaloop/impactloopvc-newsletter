@@ -52,13 +52,13 @@ export async function POST(req: Request) {
     };
 
     if (!draftId) {
-      return NextResponse.json({ error: 'draftId saknas' }, { status: 400 });
+      return NextResponse.json({ error: 'draftId missing' }, { status: 400 });
     }
 
     // Hämta utkast
     const draft = await getDraftById(draftId);
     if (!draft) {
-      return NextResponse.json({ error: 'Utkast hittades inte' }, { status: 404 });
+      return NextResponse.json({ error: 'Draft not found' }, { status: 404 });
     }
 
     // Bygg placeholders med korrekt segment
@@ -103,7 +103,7 @@ export async function POST(req: Request) {
 
     const html = generateNewsletterHTML(placeholders);
     const subject = draft.subject;
-    const dateStr = new Date(draft.date).toLocaleDateString('sv-SE', {
+    const dateStr = new Date(draft.date).toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -111,7 +111,7 @@ export async function POST(req: Request) {
 
     // ─── Skapa Mailchimp-kampanj ──────────────────────────────────────────────
     const segmentId = isBetalande ? SEGMENT_BETALANDE : SEGMENT_GRATIS;
-    const campaignTitle = `Impact Loop ${dateStr}${isBetalande ? ' (betalande)' : ''}`;
+    const campaignTitle = `Impact Loop VC ${dateStr}${isBetalande ? ' (paid)' : ''}`;
 
     if (action === 'draft') {
       // Skapa alltid BÅDA kampanjerna – gratis och betalande
@@ -119,7 +119,7 @@ export async function POST(req: Request) {
         (['gratis', 'betalande'] as const).map(async (seg) => {
           const segIsBetalande = seg === 'betalande';
           const segId = segIsBetalande ? SEGMENT_BETALANDE : SEGMENT_GRATIS;
-          const title = `Impact Loop ${dateStr}${segIsBetalande ? ' (betalande)' : ''}`;
+          const title = `Impact Loop VC ${dateStr}${segIsBetalande ? ' (paid)' : ''}`;
 
           // Bygg HTML med rätt isBetalande-flagga
           const segPlaceholders = buildPlaceholders({ ...draftData, isBetalande: segIsBetalande });
@@ -145,7 +145,7 @@ export async function POST(req: Request) {
                 subject_line: subject,
                 preview_text: draft.preheader || subject,
                 title,
-                from_name: 'Impact Loop',
+                from_name: 'Impact Loop VC',
                 reply_to: 'info@loop.se',
               },
             }),
@@ -186,7 +186,7 @@ export async function POST(req: Request) {
     if (action === 'test') {
       const email = testEmail || process.env.MAILCHIMP_TEST_EMAIL;
       if (!email) {
-        return NextResponse.json({ error: 'Ingen testmailadress angiven' }, { status: 400 });
+        return NextResponse.json({ error: 'No test email address provided' }, { status: 400 });
       }
 
       // Skapa temporär kampanj
@@ -220,11 +220,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, sentTo: email });
     }
 
-    return NextResponse.json({ error: 'Okänd action' }, { status: 400 });
+    return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
   } catch (err) {
-    console.error('[mailchimp] Fel:', err);
+    console.error('[mailchimp] Error:', err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'Okänt fel' },
+      { error: err instanceof Error ? err.message : 'Unknown error' },
       { status: 500 }
     );
   }

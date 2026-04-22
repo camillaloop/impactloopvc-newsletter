@@ -8,38 +8,38 @@ import type { NewsletterDraft, ArticleData, SvepetData, MeetupData } from '@/lib
 const EDITORS_LIST = [
   {
     day: 1,
-    name: 'Andreas Jennische',
-    email: 'andreas@loop.se',
-    title: 'Nyhetschef, Impact Loop',
-    imageUrl: 'https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/903715d9-8891-c5d4-be8b-d3902622bd3d.png',
+    name: 'Siôn Geschwindt',
+    email: 'sion@loop.se',
+    title: 'Managing editor, Impact Loop VC',
+    imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
   },
   {
     day: 2,
-    name: 'Jenny Kjellén',
-    email: 'jenny@loop.se',
-    title: 'Reporter och redaktör, Impact Loop',
-    imageUrl: 'https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/a5912c23-472c-34a8-d789-bfd43f0b2559.png',
+    name: 'Siôn Geschwindt',
+    email: 'sion@loop.se',
+    title: 'Managing editor, Impact Loop VC',
+    imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
   },
   {
     day: 3,
-    name: 'Johann Bernövall',
-    email: 'johann@loop.se',
-    title: 'Reporter och redaktör, Impact Loop',
-    imageUrl: 'https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/9656a354-d822-b636-20c9-30df9c2a411a.png',
+    name: 'Siôn Geschwindt',
+    email: 'sion@loop.se',
+    title: 'Managing editor, Impact Loop VC',
+    imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
   },
   {
     day: 4,
-    name: 'Camilla Bergman',
-    email: 'camilla@loop.se',
-    title: 'Chefredaktör, Impact Loop',
-    imageUrl: 'https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/a93fb1b7-f27d-d5aa-f88a-5f7f602bf174.png',
+    name: 'Siôn Geschwindt',
+    email: 'sion@loop.se',
+    title: 'Managing editor, Impact Loop VC',
+    imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
   },
 ] as const;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function formatDate(d: string) {
-  return new Date(d).toLocaleDateString('sv-SE', {
+  return new Date(d).toLocaleDateString('en-GB', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -107,7 +107,7 @@ function ArticleSearch({
           <input
             autoFocus
             className="input flex-1"
-            placeholder="Sök artikel..."
+            placeholder="Search article..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
@@ -120,10 +120,10 @@ function ArticleSearch({
         </div>
         <div className="max-h-96 overflow-y-auto">
           {loading && (
-            <p className="p-4 text-sm text-gray-500 text-center">Söker...</p>
+            <p className="p-4 text-sm text-gray-500 text-center">Searching...</p>
           )}
           {!loading && results.length === 0 && q.length >= 2 && (
-            <p className="p-4 text-sm text-gray-500 text-center">Inga resultat</p>
+            <p className="p-4 text-sm text-gray-500 text-center">No results</p>
           )}
           {results.map((a) => (
             <button
@@ -170,7 +170,7 @@ function ArticleCard({
             onClick={onSwap}
             className="text-xs text-blue-600 hover:underline"
           >
-            Byt artikel
+            Swap article
           </button>
         </div>
         <p className="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
@@ -183,7 +183,7 @@ function ArticleCard({
           rel="noreferrer"
           className="text-xs text-blue-500 hover:underline mt-1 inline-block"
         >
-          Öppna artikel →
+          Open article →
         </a>
       </div>
     </div>
@@ -202,7 +202,7 @@ function SvepetEditor({
   return (
     <div className="space-y-4">
       <div>
-        <Label>Överskrift (hela svepet)</Label>
+        <Label>Headline (entire roundup)</Label>
         <input
           className="input"
           value={data.headline}
@@ -211,7 +211,7 @@ function SvepetEditor({
       </div>
       {data.items.map((item, i) => (
         <div key={i} className="border border-gray-100 rounded-lg p-3 space-y-2">
-          <p className="text-xs text-gray-400 font-medium">Punkt {i + 1}</p>
+          <p className="text-xs text-gray-400 font-medium">Item {i + 1}</p>
           <div className="grid grid-cols-12 gap-2">
             <div className="col-span-2">
               <Label>Emoji</Label>
@@ -226,7 +226,7 @@ function SvepetEditor({
               />
             </div>
             <div className="col-span-10">
-              <Label>Fet rubrik</Label>
+              <Label>Bold headline</Label>
               <input
                 className="input"
                 value={item.boldTitle}
@@ -239,7 +239,7 @@ function SvepetEditor({
             </div>
           </div>
           <div>
-            <Label>Text</Label>
+            <Label>Body text</Label>
             <textarea
               className="input min-h-[60px] resize-y"
               value={item.body}
@@ -283,11 +283,11 @@ function MeetupsEditor({
               onClick={() => remove(i)}
               className="text-xs text-red-500 hover:text-red-700"
             >
-              Ta bort
+              Remove
             </button>
           </div>
           <div>
-            <Label>Titel</Label>
+            <Label>Title</Label>
             <input
               className="input"
               value={m.title}
@@ -295,7 +295,7 @@ function MeetupsEditor({
             />
           </div>
           <div>
-            <Label>Info (datum, plats, länk etc.)</Label>
+            <Label>Info (date, location, link etc.)</Label>
             <textarea
               className="input min-h-[60px] resize-y"
               value={m.info}
@@ -308,7 +308,7 @@ function MeetupsEditor({
         onClick={add}
         className="w-full py-2 border-2 border-dashed border-gray-200 rounded-lg text-sm text-gray-400 hover:border-green-300 hover:text-green-600 transition-colors"
       >
-        + Lägg till meetup
+        + Add meetup
       </button>
     </div>
   );
@@ -328,7 +328,7 @@ function MostReadSection({ draft }: { draft: NewsletterDraft | null }) {
   }
 
   return (
-    <Section title="Mest läst (senaste 7 dagarna från GA4)">
+    <Section title="Most read (last 7 days from GA4)">
       {articles.length > 0 ? (
         <ol className="space-y-2">
           {articles.map((a, i) => (
@@ -349,7 +349,7 @@ function MostReadSection({ draft }: { draft: NewsletterDraft | null }) {
         </ol>
       ) : (
         <p className="text-sm text-gray-400 italic">
-          Inga mest läst-artiklar hämtades – GA4-data saknas eller är tom.
+          No most-read articles retrieved – GA4 data is missing or empty.
         </p>
       )}
     </Section>
@@ -416,7 +416,7 @@ export default function DashboardPage() {
           setMeetups(data.meetups_data ?? []);
           setEditorDay(data.editor_day ?? 1);
         } else {
-          setError(String(data.error ?? 'Inget utkast hittades'));
+          setError(String(data.error ?? 'No draft found'));
         }
         setLoading(false);
       })
@@ -451,9 +451,9 @@ export default function DashboardPage() {
         }),
       });
       const updated = await res.json();
-      if (!res.ok) throw new Error(updated.error ?? 'Sparning misslyckades');
+      if (!res.ok) throw new Error(updated.error ?? 'Save failed');
       setDraft(updated);
-      setSuccess('Sparat!');
+      setSuccess('Saved!');
       setTimeout(() => setSuccess(''), 2000);
     } catch (e: unknown) {
       setError(String(e));
@@ -485,14 +485,14 @@ export default function DashboardPage() {
           }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? 'Mailchimp-fel');
+        if (!res.ok) throw new Error(data.error ?? 'Mailchimp error');
 
         if (action === 'draft') {
-          setSuccess('Båda kampanjerna skapade!');
+          setSuccess('Both campaigns created!');
           if (data.editUrl) setEditUrlGratis(data.editUrl);
           if (data.editUrlBetalande) setEditUrlBetalande(data.editUrlBetalande);
         } else {
-          setSuccess(`Testmail skickat till ${data.sentTo}`);
+          setSuccess(`Test email sent to ${data.sentTo}`);
         }
       } catch (e: unknown) {
         setError(String(e));
@@ -510,7 +510,7 @@ export default function DashboardPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm text-gray-500">Laddar utkast...</p>
+          <p className="text-sm text-gray-500">Loading draft...</p>
         </div>
       </div>
     );
@@ -521,13 +521,13 @@ export default function DashboardPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center max-w-md">
           <p className="text-6xl mb-4">📭</p>
-          <h1 className="text-lg font-semibold text-gray-800 mb-2">Inget utkast idag</h1>
+          <h1 className="text-lg font-semibold text-gray-800 mb-2">No draft today</h1>
           <p className="text-sm text-gray-500 mb-6">{error}</p>
           <button
             onClick={() => fetch('/api/collect').then(() => window.location.reload())}
             className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
           >
-            Kör datainsamling nu
+            Run data collection now
           </button>
         </div>
       </div>
@@ -540,7 +540,7 @@ export default function DashboardPage() {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div>
-            <h1 className="text-base font-semibold text-gray-900">Impact Loop VC · Nyhetsbrev</h1>
+            <h1 className="text-base font-semibold text-gray-900">Impact Loop VC · Newsletter</h1>
             {draft && (
               <p className="text-xs text-gray-400">
                 {formatDate(draft.date)} ·{' '}
@@ -554,10 +554,10 @@ export default function DashboardPage() {
                   }`}
                 >
                   {draft.status === 'draft'
-                    ? 'Utkast'
+                    ? 'Draft'
                     : draft.status === 'approved'
-                    ? 'Godkänt'
-                    : 'Skickat'}
+                    ? 'Approved'
+                    : 'Sent'}
                 </span>
               </p>
             )}
@@ -574,7 +574,7 @@ export default function DashboardPage() {
               disabled={saving}
               className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg font-medium disabled:opacity-50 shrink-0"
             >
-              {saving ? 'Sparar...' : 'Spara'}
+              {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
         </div>
@@ -584,7 +584,7 @@ export default function DashboardPage() {
 
         {/* ─── Ämnesrad ─── */}
         {draft && (
-          <Section title="Ämnesrad — välj och redigera">
+          <Section title="Subject line — select and edit">
             <div className="space-y-2">
               {subjectOptions.map((opt, i) => (
                 <div
@@ -615,7 +615,7 @@ export default function DashboardPage() {
                       // Preheadern baseras alltid på ämnesrad 2 utan emoji
                       if (i === 1) {
                         const withoutEmoji = e.target.value.replace(/^[\p{Emoji}\uFE0F\u200D\s]+/u, '').trim();
-                        setPreheader(`Och: ${withoutEmoji}`);
+                        setPreheader(`Also: ${withoutEmoji}`);
                       }
                     }}
                     onClick={(e) => e.stopPropagation()}
@@ -629,30 +629,30 @@ export default function DashboardPage() {
         )}
 
         {/* ─── Preheader ─── */}
-        <Section title="Preheader (syns under ämnesraden i inkorgen)">
+        <Section title="Preheader (shown below the subject line in the inbox)">
           <input
             type="text"
             className="input"
             value={preheader}
             onChange={(e) => setPreheader(e.target.value)}
-            placeholder='Och: ...'
+            placeholder='Also: ...'
             maxLength={90}
           />
-          <p className="text-xs text-gray-400 mt-1">{preheader.length}/90 tecken · Uppdateras automatiskt om du ändrar ämnesrad 2</p>
+          <p className="text-xs text-gray-400 mt-1">{preheader.length}/90 characters · Updates automatically when you change subject line 2</p>
         </Section>
 
         {/* ─── Intro ─── */}
-        <Section title="Inledning (redaktörens intro)">
+        <Section title="Introduction (editor's intro)">
           <textarea
             className="input min-h-[120px] resize-y"
             value={intro}
             onChange={(e) => setIntro(e.target.value)}
-            placeholder="AI-genererad inledning – redigera vid behov..."
+            placeholder="AI-generated introduction – edit as needed..."
           />
         </Section>
 
         {/* ─── Redaktör ─── */}
-        <Section title="Redaktör">
+        <Section title="Editor">
           {(() => {
             const editor = EDITORS_LIST.find((e) => e.day === editorDay) ?? EDITORS_LIST[0];
             return (
@@ -667,7 +667,7 @@ export default function DashboardPage() {
                 {/* Info + dropdown */}
                 <div className="flex-1 space-y-2">
                   <div>
-                    <Label>Välj redaktör</Label>
+                    <Label>Select editor</Label>
                     <select
                       className="input mt-1"
                       value={editorDay}
@@ -682,11 +682,11 @@ export default function DashboardPage() {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
                     <div>
-                      <span className="text-xs text-gray-400 block">Titel</span>
+                      <span className="text-xs text-gray-400 block">Title</span>
                       {editor.title}
                     </div>
                     <div>
-                      <span className="text-xs text-gray-400 block">Mejl</span>
+                      <span className="text-xs text-gray-400 block">Email</span>
                       {editor.email}
                     </div>
                   </div>
@@ -697,25 +697,25 @@ export default function DashboardPage() {
         </Section>
 
         {/* ─── Artiklar ─── */}
-        <Section title="Artiklar">
+        <Section title="Articles">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {article1 && (
               <ArticleCard
-                label="Artikel 1"
+                label="Article 1"
                 article={article1}
                 onSwap={() => setSwapTarget('article1')}
               />
             )}
             {article2 && (
               <ArticleCard
-                label="Artikel 2"
+                label="Article 2"
                 article={article2}
                 onSwap={() => setSwapTarget('article2')}
               />
             )}
             {article3 ? (
               <ArticleCard
-                label="Artikel 3"
+                label="Article 3"
                 article={article3}
                 onSwap={() => setSwapTarget('article3')}
               />
@@ -724,27 +724,27 @@ export default function DashboardPage() {
                 onClick={() => setSwapTarget('article3')}
                 className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-sm text-gray-400 hover:border-green-300 hover:text-green-600 transition-colors text-center"
               >
-                + Lägg till tredje artikel
+                + Add third article
               </button>
             )}
           </div>
         </Section>
 
         {/* ─── Impact-svepet ─── */}
-        <Section title="Impact-svepet">
+        <Section title="Bits and Pieces">
           <SvepetEditor data={svepet} onChange={setSvepet} />
         </Section>
 
         {/* ─── Kapitalrundor ─── */}
-        <Section title="Kapitalrundor (Loopdesk-data)">
+        <Section title="Funding rounds (Loopdesk data)">
           <p className="text-xs text-gray-400 mb-2">
-            Klistra in HTML eller fritext från Loopdesk. Lämna tomt om inga rundor idag.
+            Paste HTML or plain text from Loopdesk. Leave blank if no rounds today.
           </p>
           <textarea
             className="input min-h-[100px] font-mono text-xs resize-y"
             value={fundingText}
             onChange={(e) => setFundingText(e.target.value)}
-            placeholder="<p>Företaget X tog in 50 MSEK...</p>"
+            placeholder="<p>Company X raised SEK 50m...</p>"
           />
         </Section>
 
@@ -757,11 +757,11 @@ export default function DashboardPage() {
         </Section>
 
         {/* ─── Toggles ─── */}
-        <Section title="Extra sektioner">
+        <Section title="Extra sections">
           <div className="flex gap-8">
             {[
-              { label: 'Sponsor-bild', value: sponsorActive, set: setSponsorActive },
-              { label: 'Teknik-annons', value: teknikActive, set: setTeknikActive },
+              { label: 'Sponsor image', value: sponsorActive, set: setSponsorActive },
+              { label: 'Tech advert', value: teknikActive, set: setTeknikActive },
             ].map(({ label, value, set }) => (
               <button
                 key={label}
@@ -786,11 +786,11 @@ export default function DashboardPage() {
         </Section>
 
         {/* ─── Skicka till Mailchimp ─── */}
-        <Section title="Skicka till Mailchimp" className="!border-green-200 !bg-green-50/50">
+        <Section title="Send to Mailchimp" className="!border-green-200 !bg-green-50/50">
           <div className="space-y-4">
             {/* Testmail */}
             <div>
-              <Label>Testmail (välj segment)</Label>
+              <Label>Test email (select segment)</Label>
               <div className="flex flex-wrap gap-2 mt-1">
                 {(['gratis', 'betalande'] as const).map((s) => (
                   <label
@@ -802,7 +802,7 @@ export default function DashboardPage() {
                     }`}
                   >
                     <input type="radio" name="segment" value={s} checked={segment === s} onChange={() => setSegment(s)} className="hidden" />
-                    {s === 'gratis' ? '🆓 Gratis' : '⭐ Betalande'}
+                    {s === 'gratis' ? '🆓 Free' : '⭐ Paid'}
                   </label>
                 ))}
               </div>
@@ -810,7 +810,7 @@ export default function DashboardPage() {
                 <input
                   className="input flex-1"
                   type="email"
-                  placeholder="din@email.se"
+                  placeholder="your@email.com"
                   value={testEmail}
                   onChange={(e) => setTestEmail(e.target.value)}
                 />
@@ -819,7 +819,7 @@ export default function DashboardPage() {
                   disabled={sending || !testEmail}
                   className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 whitespace-nowrap shrink-0"
                 >
-                  {sending ? '...' : 'Skicka test'}
+                  {sending ? '...' : 'Send test'}
                 </button>
               </div>
             </div>
@@ -830,7 +830,7 @@ export default function DashboardPage() {
               disabled={sending}
               className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors text-sm"
             >
-              {sending ? 'Skapar kampanjer...' : '✓ Skapa Mailchimp-utkast (gratis + betalande)'}
+              {sending ? 'Creating campaigns...' : '✓ Create Mailchimp draft (free + paid)'}
             </button>
 
             {/* Länkar till skapade kampanjer */}
@@ -839,20 +839,20 @@ export default function DashboardPage() {
                 {editUrlGratis && (
                   <a href={editUrlGratis} target="_blank" rel="noreferrer"
                     className="flex-1 py-2 text-center text-sm font-medium bg-white border border-green-300 text-green-700 rounded-lg hover:bg-green-50 transition-colors">
-                    🆓 Öppna gratisbrev →
+                    🆓 Open free newsletter →
                   </a>
                 )}
                 {editUrlBetalande && (
                   <a href={editUrlBetalande} target="_blank" rel="noreferrer"
                     className="flex-1 py-2 text-center text-sm font-medium bg-white border border-yellow-300 text-yellow-700 rounded-lg hover:bg-yellow-50 transition-colors">
-                    ⭐ Öppna betalbrev →
+                    ⭐ Open paid newsletter →
                   </a>
                 )}
               </div>
             )}
 
             <p className="text-xs text-green-700/70 text-center">
-              Båda kampanjerna skapas som utkast — du godkänner och schemalägger manuellt i Mailchimp.
+              Both campaigns are created as drafts — you approve and schedule manually in Mailchimp.
             </p>
           </div>
         </Section>

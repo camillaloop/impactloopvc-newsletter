@@ -60,7 +60,7 @@ export async function generateIntro(
   const examples = await fetchEditorExamples(editorName);
   const examplesBlock =
     examples.length > 0
-      ? `\nHär är ${examples.length} verkliga intron som ${editorName} tidigare skrivit (senaste först):\n${examples.map((e, i) => `${i + 1}. "${e}"`).join('\n')}\n\nStudera tonalitet, längd, meningsbyggnad och hur ${editorName.split(' ')[0]} brukar inleda. Matcha stilen exakt.\n`
+      ? `\nHere are ${examples.length} real introductions that ${editorName} has previously written (most recent first):\n${examples.map((e, i) => `${i + 1}. "${e}"`).join('\n')}\n\nStudy the tone, length, sentence structure and how ${editorName.split(' ')[0]} typically opens. Match the style exactly.\n`
       : '';
 
   const msg = await getClient().messages.create({
@@ -69,12 +69,12 @@ export async function generateIntro(
     messages: [
       {
         role: 'user',
-        content: `Du är ${editorName} och skriver en kort inledning till Impact Loops dagliga nyhetsbrev om hållbart näringsliv i Sverige.
+        content: `You are ${editorName} and you are writing a short introduction for Impact Loop VC's daily newsletter on impact investing and sustainable business.
 ${examplesBlock}
-Artiklarna i dagens nyhetsbrev:
+Today's articles in the newsletter:
 ${articleSummary}
 
-Skriv en inledning på 2–4 meningar i jag-form. Varm, personlig och journalistisk ton. Inga hashtags, inga listor. Nämn 1–2 av artiklarna utan att citera titlarna rakt av. Avsluta INTE med "Trevlig läsning" eller liknande – det lägger redaktören till själv. Använd INTE halvlångt tankstreck (–) i texten – det hör inte hemma i den här stilen. Svara ENDAST med inledningen, ingen förklaring.`,
+Write an introduction of 2–4 sentences in the first person. Warm, personal and journalistic tone. No hashtags, no lists. Mention 1–2 of the articles without quoting their titles directly. Do NOT end with "Happy reading" or similar – the editor adds that themselves. Do NOT use en-dashes (–) in the text – they do not suit this style. Reply ONLY with the introduction, no explanation.`,
       },
     ],
   });
@@ -121,24 +121,24 @@ export async function generateTocLabels(
     messages: [
       {
         role: 'user',
-        content: `Skriv superkorta innehållsförteckningsetiketter för dessa artiklar. Max 6 ord per rad.
+        content: `Write very short table of contents labels for these articles. Maximum 6 words per line.
 
-REGLER:
-- Fånga kärnan på 4–6 ord, som en skarp teaserrad
-- INGA prefix som "GENOMGÅNG:", "INTERVJU:", "JUST NU:" – de tar plats och ska inte användas
-- Inga punkter, inga citat, inga emojis
-- Skriv på svenska
+RULES:
+- Capture the essence in 4–6 words, like a sharp teaser
+- NO prefixes such as "OVERVIEW:", "INTERVIEW:", "BREAKING:" – they take up space and should not be used
+- No bullet points, no quotes, no emojis
+- Write in English
 
-EXEMPEL på rätt format:
-De har lockat mest kapital
-Så sparade Voi miljoner med AI
-Recoma tar in 14 miljoner
-Han byggde om bolaget med AI
+EXAMPLES of correct format:
+Who raised the most capital
+How AI cut Voi's costs
+CuspAI targets unicorn status
+Building the business with AI
 
-ARTIKLAR:
+ARTICLES:
 ${list}
 
-Svara ENBART med en etikett per rad, i samma ordning, utan numrering.`,
+Reply ONLY with one label per line, in the same order, without numbering.`,
       },
     ],
   });
@@ -164,7 +164,7 @@ export function buildPreheader(subjectOptions: [string, string, string]): string
   const second = subjectOptions[1] ?? subjectOptions[0];
   // Ta bort ledande emoji (unicode emoji-tecken + eventuellt mellanslag)
   const withoutEmoji = second.replace(/^[\p{Emoji}\uFE0F\u200D\s]+/u, '').trim();
-  return `Och: ${withoutEmoji}`;
+  return `Also: ${withoutEmoji}`;
 }
 
 /**
@@ -181,7 +181,7 @@ export async function generateSubjectLines(
   const examples = await fetchSubjectExamples();
   const examplesBlock =
     examples.length > 0
-      ? `\nHär är de 20 bäst presterande ämnesraderna från Impact Loops historik (öppningsfrekvens | ämnesrad):\n${examples.join('\n')}\n\nStudera mönstren: emoji i början, konkreta siffror, citat med spänning, namngivna bolag/personer, kontrast/konflikt, max ~65 tecken.\n`
+      ? `\nHere are the 20 best-performing subject lines from Impact Loop's history (open rate | subject line):\n${examples.join('\n')}\n\nStudy the patterns: emoji at the start, concrete figures, tension-filled quotes, named companies/individuals, contrast/conflict, max ~65 characters.\n`
       : '';
 
   const msg = await getClient().messages.create({
@@ -190,21 +190,21 @@ export async function generateSubjectLines(
     messages: [
       {
         role: 'user',
-        content: `Du skriver ämnesrader för Impact Loops dagliga nyhetsbrev om hållbart näringsliv i Sverige.
+        content: `You write subject lines for Impact Loop VC's daily newsletter on impact investing and sustainable business.
 ${examplesBlock}
-Artiklarna idag:
+Today's articles:
 ${articleSummary}
 
-Generera exakt 3 ämnesrader i Impact Loops stil. Regler:
-- Börja med en relevant emoji
-- Max 65 tecken per rad
-- Konkret och nyfikenhetsskapande
-- FÖRBJUDET: påhittade formuleringar, ord eller fraser som inte finns i artiklarna
-- Variera stil: en med siffra/fakta, en med kontrast eller paradox, en mer berättande vinkel
-- Svenska, namnge gärna bolag/personer när det stämmer med artikeln
-- Använd BARA information som faktiskt finns i artikeltexterna ovan
+Generate exactly 3 subject lines in Impact Loop VC's style. Rules:
+- Start with a relevant emoji
+- Maximum 65 characters per line
+- Concrete and curiosity-inducing
+- FORBIDDEN: invented phrases, words or expressions not found in the articles
+- Vary the style: one with a figure/fact, one with contrast or paradox, one more narrative
+- In English, name companies/individuals where relevant to the article
+- Use ONLY information that actually appears in the article texts above
 
-Svara ENBART med de 3 ämnesraderna, en per rad, utan numrering eller förklaring.`,
+Reply ONLY with the 3 subject lines, one per line, without numbering or explanation.`,
       },
     ],
   });
@@ -220,7 +220,7 @@ Svara ENBART med de 3 ämnesraderna, en per rad, utan numrering eller förklarin
 
   if (lines.length < 3) {
     // Pad with copies if needed
-    while (lines.length < 3) lines.push(lines[0] ?? 'Impact Loop idag');
+    while (lines.length < 3) lines.push(lines[0] ?? 'Impact Loop VC today');
   }
 
   return [lines[0], lines[1], lines[2]];
@@ -262,10 +262,10 @@ export async function generateImpactSvepet(
 
   const examplesBlock =
     examples.length > 0
-      ? `\nHär är ${examples.length} verkliga Impact-svepet från tidigare nyhetsbrev. Studera format, längd och ton exakt:\n\n${examples
+      ? `\nHere are ${examples.length} real Bits and Pieces examples from previous newsletters. Study the format, length and tone exactly:\n\n${examples
           .map(
             (e, i) =>
-              `EXEMPEL ${i + 1} – "${e.headline}":\n${e.items
+              `EXAMPLE ${i + 1} – "${e.headline}":\n${e.items
                 .map((it) => `• ${it.emoji} **${it.boldTitle}** – ${it.body}`)
                 .join('\n')}`
           )
@@ -282,10 +282,10 @@ export async function generateImpactSvepet(
               `${i + 1}. [${n.source}] ${n.title}${n.description ? ' – ' + n.description : ''}\n   Länk: ${n.link}`
           )
           .join('\n')
-      : '(Inga nyheter tillgängliga)';
+      : '(No news available)';
 
   const mustIncludeBlock = mustInclude.length > 0
-    ? `\nOBLIGATORISKT: Redaktören har angett att svepet MÅSTE inkludera en nyhet om: ${mustInclude.map(h => `"${h}"`).join(', ')}. Hitta den/de bäst matchande nyheterna i listan nedan och inkludera dem. Övriga platser väljer du fritt.\n`
+    ? `\nMANDATORY: The editor has specified that the roundup MUST include a news item about: ${mustInclude.map(h => `"${h}"`).join(', ')}. Find the best-matching news item(s) in the list below and include them. You may choose the remaining items freely.\n`
     : '';
 
   const msg = await getClient().messages.create({
@@ -294,41 +294,41 @@ export async function generateImpactSvepet(
     messages: [
       {
         role: 'user',
-        content: `Du skriver "Impact-svepet" för Impact Loops dagliga nyhetsbrev – tre korta hållbarhetsnyheter.
+        content: `You write "Bits and Pieces" for Impact Loop VC's daily newsletter – three short impact and sustainability news items.
 ${mustIncludeBlock}
 
-Impact Loop riktar sig till svenska impact-bolag, entreprenörer och investerare. De vill veta vad som händer i sin bransch och omvärld – inte allmän klimatupplysning.
+Impact Loop VC is aimed at European impact startups, entrepreneurs and investors. They want to know what is happening in their sector and beyond – not general sustainability awareness.
 
-PRIORITERA (i ordning):
-1. Svenska/nordiska aktörer med konkret nyhet (raise, lansering, partnerskap, personbyte)
-2. Rapporter/studier med siffror och affärsrelevans för svenska läsare
-3. Kända internationella bolag med branschnyhet (Mondelēz, H&M, IKEA etc.)
-4. EU/policy med direkt konsekvens för svenska bolag
+PRIORITISE (in order):
+1. European impact companies with concrete news (raise, launch, partnership, leadership change)
+2. Reports/studies with figures and business relevance for European impact investors
+3. Well-known international companies with relevant sector news
+4. EU/policy with direct consequences for European companies and investors
 
-VÄLJ BORT: allmänpolitik utan impact/hållbarhets-vinkel, stora börsbolag utan hållbarhetsvinkel, USA/Trump/Kina, naturkatastrofer utan marknadskoppling, livsstilsråd. VÄLJ OCKSÅ BORT: pressmeddelanden som bara är certifieringsbesked, märkningsbesked eller liknande utan konkret affärsnyhet (ny produkt, ny tjänst, ny investering, nytt partnerskap, ny studie med siffror).
+EXCLUDE: general politics without an impact/sustainability angle, large listed companies without a sustainability angle, natural disasters without market relevance, lifestyle advice. ALSO EXCLUDE: press releases that are merely certification announcements, labelling notices or similar without a concrete business story (new product, new service, new investment, new partnership, new study with figures).
 
-Internationella nyheter är bara relevanta om de rör ett specifikt känt bolag, en rapport med konkreta siffror, eller en trend som direkt berör svenska investerare/startups.
+International news is only relevant if it concerns a specific well-known company, a report with concrete figures, or a trend that directly affects European investors/startups.
 
-Skriv enkelt och rakt på sak – alltid med impact-entreprenören eller investeraren som tilltänkt läsare.
-Skriv ut förkortningar som inte är allmänt kända.
+Write plainly and directly – always with the impact entrepreneur or investor as the intended reader.
+Spell out abbreviations that are not widely known.
 ${examplesBlock}
-Välj de 3 bästa nyheterna och skriv dem i Impact Loops stil. Inkludera ALLTID källans länk och namn i JSON-svaret.
+Choose the 3 best news items and write them in Impact Loop VC's Bits and Pieces style. ALWAYS include the source's link and name in the JSON response.
 
-ABSOLUT KRAV – DIVERSITET: De tre notiserna MÅSTE handla om tre olika bolag/organisationer/ämnen. Det är förbjudet att ta med två nyheter om samma person, bolag eller ämne – även om det finns flera artiklar om dem i listan. Välj i så fall den bästa av dem och hitta ett annat ämne till de övriga platserna.
+ABSOLUTE REQUIREMENT – DIVERSITY: The three items MUST cover three different companies/organisations/topics. It is forbidden to include two news items about the same person, company or topic – even if there are multiple articles about them in the list. In that case, choose the best one and find a different topic for the remaining slots.
 
-TILLGÄNGLIGA NYHETER (nummer, källa, rubrik, beskrivning, länk):
+AVAILABLE NEWS (number, source, headline, description, link):
 ${newsBlock}
 
-Regler för formatet:
-- Överskrift: 3–5 ord specifikt för dagens tema (aldrig "Hållbarhet idag")
-- Emoji: matchar ämnet exakt
-- Fet rubrik: max 7 ord, konkret och nyhetsdriven
-- Brödtext: MAX EN mening, ca 15–20 ord. Kärnan i nyheten + källa. Ingenting mer. Exempel: "Snacksjätten Mondelēz har skapat världens första chokladkakor med cellbaserat kakaosmör, skriver Green Queen." INTE två meningar, INTE bakgrund, INTE förklaringar.
-- link: exakt URL från nyhetslistan
-- source: EXAKT samma text som du skriver i brödtexten (t.ex. om du skriver "rapporterar Di" → source: "Di", om du skriver "skriver Green Queen" → source: "Green Queen", om du skriver "enligt DN" → source: "DN")
-- Mixa gärna: ett bolag/startup + en rapport + ett EU/branschnyhet
+Rules for the format:
+- Headline: 3–5 words specific to today's theme (never "Impact today")
+- Emoji: matches the topic exactly
+- Bold headline: max 7 words, concrete and news-driven
+- Body text: MAXIMUM ONE sentence, approx. 15–20 words. The core of the news item + source. Nothing more. Example: "Snack giant Mondelēz has created the world's first chocolate made with cell-based cocoa butter, reports Green Queen." NOT two sentences, NOT background, NOT explanations.
+- link: exact URL from the news list
+- source: EXACTLY the same text as you write in the body (e.g. if you write "reports Bloomberg" → source: "Bloomberg", if you write "writes Green Queen" → source: "Green Queen", if you write "according to the FT" → source: "FT")
+- Mix where possible: one company/startup + one report + one EU/sector news item
 
-Svara ENBART i detta JSON-format:
+Reply ONLY in this JSON format:
 {
   "headline": "...",
   "items": [
@@ -345,17 +345,17 @@ Svara ENBART i detta JSON-format:
   if (text.type !== 'text') throw new Error('Unexpected response from Claude');
 
   const jsonMatch = text.text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Ingen JSON i svaret');
+  if (!jsonMatch) throw new Error('No JSON in response');
 
   try {
     const result = JSON.parse(jsonMatch[0]) as SvepetResult;
     if (!result.headline || !Array.isArray(result.items) || result.items.length < 3) {
-      throw new Error('Ogiltigt svepet-format');
+      throw new Error('Invalid roundup format');
     }
     return result;
   } catch {
     return {
-      headline: 'Hållbarhet idag',
+      headline: 'Impact today',
       items: [
         { emoji: '🌿', boldTitle: candidates[0]?.title ?? 'Nyhet 1', body: candidates[0]?.description ?? '' },
         { emoji: '⚡', boldTitle: candidates[1]?.title ?? 'Nyhet 2', body: candidates[1]?.description ?? '' },
@@ -390,7 +390,7 @@ export function buildSvepetHtml(svepet: SvepetResult): string {
     return `<p${pClass}><strong>${item.emoji} ${item.boldTitle}.</strong> ${body}</p>`;
   }
 
-  return `<tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="727" class="mceText" id="dataBlockId-727" style="width:100%"><p class="last-child"><span style="color:#e2baba;">IMPACT-SVEPET</span></p></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="801" class="mceText" id="dataBlockId-801" style="width:100%"><h1 class="last-child">${headline} \u2013 tre saker att ha koll p\u00e5 idag</h1></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="721" class="mceText" id="dataBlockId-721" style="width:100%">${renderItem(item1, false)}<p><br></p>${renderItem(item2, false)}<p><br></p>${renderItem(item3, true)}</div></td></tr></tbody></table></td></tr><tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:24px;padding-left:24px" class="mceBlockContainer" valign="top"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" role="presentation" class="mceDividerContainer" data-block-id="709"> <tbody><tr><td style="min-width:100%;border-top-width:1px;border-top-style:solid;border-top-color:#e5e6d2" class="mceDividerBlock" valign="top"></td></tr></tbody></table></td></tr>`;
+  return `<tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="727" class="mceText" id="dataBlockId-727" style="width:100%"><p class="last-child"><span style="color:#e2baba;">BITS AND PIECES</span></p></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="801" class="mceText" id="dataBlockId-801" style="width:100%"><h1 class="last-child">${headline} \u2013 3 things to keep you in the loop today</h1></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="721" class="mceText" id="dataBlockId-721" style="width:100%">${renderItem(item1, false)}<p><br></p>${renderItem(item2, false)}<p><br></p>${renderItem(item3, true)}</div></td></tr></tbody></table></td></tr><tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:24px;padding-left:24px" class="mceBlockContainer" valign="top"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" role="presentation" class="mceDividerContainer" data-block-id="709"> <tbody><tr><td style="min-width:100%;border-top-width:1px;border-top-style:solid;border-top-color:#e5e6d2" class="mceDividerBlock" valign="top"></td></tr></tbody></table></td></tr>`;
 }
 
 // ─── HTML-builder för funding rounds ─────────────────────────────────────────
@@ -405,7 +405,7 @@ export function buildFundingHtml(
 ): string {
   if (isBetalande && fundingText) {
     return `<tr>
-    <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="723" class="mceText" id="dataBlockId-723" style="width:100%"><h1 class="last-child">Nya rundor och aff\u00e4rer</h1></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="668" class="mceText" id="dataBlockId-668" style="width:100%"><p>${fundingText}</p></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="743" class="mceText" id="dataBlockId-743" style="width:100%"><p class="last-child"><em>Alla siffror \u00e4r v\u00e4rdering f\u00f6re kapitalanskaffning (pre-money) om det inte st\u00e5r n\u00e5got annat. Tips? Maila oss p\u00e5 </em><a href="mailto:impact@loop.se"><em>impact@loop.se</em></a><em>.</em></p></div></td></tr>`;
+    <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="723" class="mceText" id="dataBlockId-723" style="width:100%"><h1 class="last-child">New rounds and deals</h1></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="668" class="mceText" id="dataBlockId-668" style="width:100%"><p>${fundingText}</p></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="743" class="mceText" id="dataBlockId-743" style="width:100%"><p class="last-child"><em>All figures are pre-money valuations unless otherwise stated. Got a tip? Email us at</em><a href="mailto:impact@loop.se"><em>impact@loop.se</em></a><em>.</em></p></div></td></tr>`;
   }
   // Gratis-segment: visa "bli medlem"-bild
   return '<tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="668" class="mceText" id="dataBlockId-668" style="width:100%"><a href="https://www.impactloop.se/pris?utm_source=nyhetsbrev&utm_medium=kapitalrundor" target="_blank" style="display:inline-block"><img src="https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/650757d6-8704-1a97-eb84-fab972eebcc2.png" alt="Bli medlem" style="max-width:100%; height:auto; border:0; display:block;"></a></div></td></tr></tbody></table></td></tr>';

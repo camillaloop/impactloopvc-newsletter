@@ -16,7 +16,7 @@ export interface ParsedInstruction {
   psFragment?: string;
   svepHints?: string[];
   swapArticle?: {
-    position: 1 | 2 | 3; // 1 = översta, 2 = andra, 3 = tredje
+    position: 1 | 2 | 3; // 1 = top, 2 = second, 3 = third
     fragment: string;     // del av artikelrubriken att söka efter
   };
 }
@@ -46,25 +46,25 @@ export async function parseInstruction(text: string): Promise<ParsedInstruction 
     messages: [
       {
         role: 'user',
-        content: `Du är ett verktyg som analyserar instruktioner till ett nyhetsbrev.
+        content: `You are a tool that analyses newsletter instructions.
 
 Redaktörerna heter: Andreas Jennische, Jenny Kjellén, Johann Bernövall, Camilla Bergman.
-Sätt editorName ENDAST om ett av dessa namn nämns explicit.
-Artikelfragment är rubriker eller delar av artikelrubriker — INTE personnamn som inte är redaktörer ovan.
+Set editorName ONLY if one of these names is mentioned explicitly.
+Article fragments are headlines or parts of article headlines — NOT personal names that are not editors listed above.
 
-Extrahera dessa fält (utelämna fält som inte nämns):
-- editorName: string — ENDAST om en av redaktörerna ovan nämns
-- articleFragments: string[] — delar av artikelrubriker att använda i brevet (1–3 st)
-- psFragment: string — del av PS-artikelns rubrik
-- svepHints: string[] — om användaren vill att Impact-svepet SKA inkludera en specifik nyhet. Varje hint är en kort beskrivning av nyheten/ämnet/bolaget (t.ex. "Northvolt", "Volvo cars batterier", "EU taxonomi"). Används när instruktionen nämner svepet, svepnyheter eller liknande.
-- swapArticle: { position: 1|2|3, fragment: string } — om användaren vill BYTA UT en specifik artikel i ett redan byggt brev. position 1 = översta/första artikeln, 2 = andra, 3 = tredje. fragment = del av den nya artikelns rubrik.
+Extract these fields (omit fields not mentioned):
+- editorName: string — ONLY if one of the editors above is mentioned
+- articleFragments: string[] — parts of article headlines to use in the newsletter (1–3 items)
+- psFragment: string — part of the PS article headline
+- svepHints: string[] — if the user wants the Impact Roundup to include a specific news item. Each hint is a brief description of the news/topic/company (e.g. "Northvolt", "Volvo EV batteries", "EU taxonomy"). Used when the instruction mentions the roundup or roundup news.
+- swapArticle: { position: 1|2|3, fragment: string } — if the user wants to SWAP OUT a specific article in an already-built newsletter. position 1 = top/first article, 2 = second, 3 = third. fragment = part of the new article headline.
 
-swapArticle används BARA när instruktionen handlar om att byta ut en artikel i ett befintligt brev (t.ex. "byt översta artikeln mot X", "ersätt artikel 2 med Y", "byt ut den första mot Z").
-articleFragments används när man bygger ett nytt brev från grunden.
+swapArticle is used ONLY when the instruction is about swapping out an article in an already-built newsletter (e.g. "swap the top article for X", "replace article 2 with Y", "change the first one to Z").
+articleFragments is used when building a new newsletter from scratch.
 
-Returnera ENDAST giltig JSON. Om meddelandet inte handlar om nyhetsbrev, returnera null.
+Return ONLY valid JSON. If the message is not about the newsletter, return null.
 
-Meddelande: """${text}"""`,
+Message: """${text}"""`,
       },
     ],
   });
@@ -115,7 +115,7 @@ export async function resolveInstruction(
 
   // Svep-hints
   if (result.svepHints.length > 0) {
-    result.confirmationLines.push(`✅ *Svep-hints:* ${result.svepHints.join(', ')}`);
+    result.confirmationLines.push(`✅ *Roundup hints:* ${result.svepHints.join(', ')}`);
   }
 
   // Redaktör
@@ -123,9 +123,9 @@ export async function resolveInstruction(
     const editor = findEditorByName(parsed.editorName);
     if (editor) {
       result.editorOverride = editor;
-      result.confirmationLines.push(`✅ *Redaktör:* ${editor.name}`);
+      result.confirmationLines.push(`✅ *Editor:* ${editor.name}`);
     } else {
-      result.confirmationLines.push(`⚠️ Hittade ingen redaktör som matchar "${parsed.editorName}"`);
+      result.confirmationLines.push(`⚠️ No editor found matching "${parsed.editorName}"`);
     }
   }
 
@@ -134,9 +134,9 @@ export async function resolveInstruction(
     const hits = await searchArticles(fragment, 5);
     if (hits.length > 0) {
       result.articleIds.push(hits[0]._id);
-      result.confirmationLines.push(`✅ *Artikel:* ${hits[0].title}`);
+      result.confirmationLines.push(`✅ *Article:* ${hits[0].title}`);
     } else {
-      result.confirmationLines.push(`⚠️ Hittade ingen artikel för "${fragment}"`);
+      result.confirmationLines.push(`⚠️ No article found for "${fragment}"`);
     }
   }
 
@@ -145,9 +145,9 @@ export async function resolveInstruction(
     const hits = await searchArticles(parsed.psFragment, 5);
     if (hits.length > 0) {
       result.psArticleId = hits[0]._id;
-      result.confirmationLines.push(`✅ *PS-artikel:* ${hits[0].title}`);
+      result.confirmationLines.push(`✅ *PS article:* ${hits[0].title}`);
     } else {
-      result.confirmationLines.push(`⚠️ Hittade ingen PS-artikel för "${parsed.psFragment}"`);
+      result.confirmationLines.push(`⚠️ No PS article found for "${parsed.psFragment}"`);
     }
   }
 
@@ -160,9 +160,9 @@ export async function resolveInstruction(
         articleId: hits[0]._id,
         articleTitle: hits[0].title,
       };
-      result.confirmationLines.push(`✅ *Byter artikel ${parsed.swapArticle.position}:* ${hits[0].title}`);
+      result.confirmationLines.push(`✅ *Swapping article ${parsed.swapArticle.position}:* ${hits[0].title}`);
     } else {
-      result.confirmationLines.push(`⚠️ Hittade ingen artikel för "${parsed.swapArticle.fragment}"`);
+      result.confirmationLines.push(`⚠️ No article found for "${parsed.swapArticle.fragment}"`);
     }
   }
 

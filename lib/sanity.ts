@@ -2,9 +2,9 @@
 // Hämtar artiklar från Sanity CMS via GROQ
 //
 // Prioriteringsordning för nyhetsbrev-artiklar:
-// 1. Publicerade poster med publishTo: ["impact-loop-vc"] (nyaste först)
-// 2. Fyll på upp till 3 med de senaste publicerade posterna
-// Drafts tas ALDRIG med.
+// 1. Poster (inkl. drafts) med publishTo: ["impact-loop-vc"] (nyaste publishedAt först)
+// 2. Fyll på upp till 4 med senaste poster (inkl. drafts) med publishTo: ["impact-loop-vc"]
+// perspective=raw används för att fånga både publicerade och opublicerade drafts.
 
 const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID!;
 const SANITY_DATASET = process.env.SANITY_DATASET ?? 'production';
@@ -87,11 +87,10 @@ function mapPost(raw: RawPost): SanityArticle {
 // ─── Huvud-funktion ───────────────────────────────────────────────────────────
 
 /**
- * Hämtar upp till 4 publicerade artiklar för nyhetsbrevet.
+ * Hämtar upp till 4 artiklar för nyhetsbrevet (inkl. drafts).
  * Artikel 1–3 används som huvudartiklar, artikel 4 som PS-artikel.
- * Drafts inkluderas aldrig.
- * 1. Publicerade poster med publishTo: ["impact-loop"] — nyaste först (schemalagda)
- * 2. Fyll på med senaste publicerade poster tills vi har 4
+ * 1. Poster med publishTo: ["impact-loop-vc"] — nyaste publishedAt först
+ * 2. Fyll på med fler sådana poster tills vi har 4
  */
 export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
   const baseProjection = `{
@@ -105,10 +104,10 @@ export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
     publishedAt
   }`;
 
-  // 1. Flaggade: hämta både publicerade och drafts med publishTo: impact-loop
-  // perspective=raw ger oss drafts.* (schemalagda artiklar som ännu inte publicerats)
+  // 1. Hämta poster (inkl. drafts) med publishTo: impact-loop-vc
+  // perspective=raw ger oss drafts.* (artiklar som ännu inte publicerats)
   const scheduledQuery = `
-    *[_type == "postEnglish" && "impact-loop-vc" in publishTo && defined(publishedAt)]
+    *[(_type == "post" || _type == "postEnglish") && "impact-loop-vc" in publishTo && defined(publishedAt)]
     | order(publishedAt desc)
     [0...10]
     ${baseProjection}
@@ -128,16 +127,16 @@ export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
     }
   }
 
-  // 2. Fyll på med senaste publicerade om färre än 4
+  // 2. Fyll på med senaste poster (inkl. drafts) om färre än 4
   if (result.length < 4) {
     const recentQuery = `
-      *[_type == "postEnglish" && "impact-loop-vc" in publishTo && defined(publishedAt)]
+      *[(_type == "post" || _type == "postEnglish") && "impact-loop-vc" in publishTo && defined(publishedAt)]
       | order(publishedAt desc)
       [0...20]
       ${baseProjection}
     `;
 
-    const recent = await sanityFetch<RawPost[]>(recentQuery, 'published').catch(() => [] as RawPost[]);
+    const recent = await sanityFetch<RawPost[]>(recentQuery, 'raw').catch(() => [] as RawPost[]);
 
     for (const raw of recent) {
       const baseId = extractBaseId(raw._id);
@@ -180,7 +179,7 @@ export async function searchArticles(
 
   const e = escape(searchTerm);
   const query = `
-    *[_type == "postEnglish" && (title match "*${e}*" || ingress match "*${e}*")]
+    *[(_type == "post" || _type == "postEnglish") && (title match "*${e}*" || ingress match "*${e}*")]
     | order(publishedAt desc)
     [0...${limit * 2}]
     ${projection}
@@ -195,7 +194,7 @@ export async function searchArticles(
     const normalized = escape(stripAccents(searchTerm));
     if (normalized !== e) {
       const normQuery = `
-        *[_type == "postEnglish" && (title match "*${normalized}*" || ingress match "*${normalized}*")]
+        *[(_type == "post" || _type == "postEnglish") && (title match "*${normalized}*" || ingress match "*${normalized}*")]
         | order(publishedAt desc)
         [0...${limit * 2}]
         ${projection}
@@ -226,7 +225,7 @@ export async function fetchArticlesByIds(ids: string[]): Promise<SanityArticle[]
   // Inkludera även drafts.* varianter för varje ID
   const allIds = ids.flatMap((id) => [`"${id}"`, `"drafts.${id}"`]).join(', ');
   const query = `
-    *[_type == "postEnglish" && _id in [${allIds}]]
+    *[(_type == "post" || _type == "postEnglish") && _id in [${allIds}]]
     {
       _id,
       title,
@@ -256,7 +255,7 @@ export async function fetchArticlesByIds(ids: string[]): Promise<SanityArticle[]
 export async function fetchArticleById(id: string): Promise<SanityArticle | null> {
   // Prova både base-ID och drafts.*-variant
   const query = `
-    *[_type == "postEnglish" && (_id == "${id}" || _id == "drafts.${id}")][0]
+    *[(_type == "post" || _type == "postEnglish") && (_id == "${id}" || _id == "drafts.${id}")][0]
     {
       _id,
       title,

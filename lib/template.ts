@@ -104,7 +104,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
       <div data-block-id="43" class="mceText" id="dataBlockId-43" style="width:100%">
         <p>[[intro_placeholder]]</p>
         <p><br></p>
-        <p><strong>I dagens nyhetsbrev:</strong></p>
+        <p><strong>In today's newsletter:</strong></p>
         [[tableofcontents_placeholder]]
         <p><br></p>
         <p><strong>[[editor_placeholder]]</strong></p>
@@ -113,7 +113,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
             <strong>[[editoremail_placeholder]]</strong>
           </a>
         </p>
-        <p style="margin-top:28px; font-family:'Courier New', Courier, monospace; font-size:14px;">\ud83d\udce9 Har n\u00e5gon vidarebefordrat det h\u00e4r nyhetsbrevet till dig? <a href="https://www.impactloop.se/nyhetsbrev" style="color:#000000; text-decoration:underline;">Signa upp sj\u00e4lv h\u00e4r!</a></p>
+        <p style="margin-top:28px; font-family:'Courier New', Courier, monospace; font-size:14px;">\ud83d\udce9 Did someone forward this newsletter to you? <a href="https://www.impactloop.com/newsletter" style="color:#000000; text-decoration:underline;">Sign up here!</a></p>
       </div>
       
     </td></tr></tbody></table></td></tr></tbody></table></td><td style="padding-top:0;padding-bottom:0" class="mceColumn" data-block-id="76" valign="top" colspan="3" width="25%"><table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation"><tbody><tr><td style="padding-top:12px;padding-bottom:0;padding-right:40px;padding-left:0" class="mceBlockContainer" align="center" valign="top"><span class="mceImageBorder" style="border:0;border-radius:0;vertical-align:top;margin:0">
@@ -197,7 +197,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
                 <p><strong>[[ingress1_placeholder]]</strong></p><br>
                 <p class="last-child">
                   <a href="[[readinglink1_placeholder]]" target="_blank">
-                    <strong>L\u00e4s artikeln h\u00e4r \u2013\u2013\u2013&gt;</strong>
+                    <strong>Read the article here &ndash;&ndash;&ndash;&gt;</strong>
                   </a>
                 </p>
               </div>
@@ -294,7 +294,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
                 </p><br>
                 <p class="last-child">
                   <a href="[[readinglink2_placeholder]]" target="_blank">
-                    <strong>L\u00e4s artikeln h\u00e4r \u2013\u2013\u2013&gt;</strong>
+                    <strong>Read the article here &ndash;&ndash;&ndash;&gt;</strong>
                   </a>
                 </p>
               </div>
@@ -345,7 +345,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
           <tr>
             <td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:12px" class="mceTextBlockContainer">
               <div data-block-id="80" class="mceText" id="dataBlockId-80" style="width:100%">
-                <h1 class="last-child">Kommande meetups, event och webinar</h1>
+                <h1 class="last-child">Upcoming meetups, events and webinars</h1>
               </div>
             </td>
           </tr>
@@ -387,7 +387,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
                   <tr>
                     <td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer">
                       <div data-block-id="103" class="mceText" id="dataBlockId-103" style="width:100%">
-                        <p class="last-child">\u2705 <a href="https://www.impactloop.se/pris?utm_source=newsletter&utm_medium=upcoming-meetups&utm_campaign=free-subscribers&utm_source=Impact+Loop+nyhetsbrev&utm_campaign=a49aeb0449-EMAIL_CAMPAIGN_2024_03_27_03_53_COPY_01&utm_medium=email&utm_term=0_-d41bb2e245-" target="_blank">Bli Builder- eller Investor-medlem h\u00e4r</a> f\u00f6r fri inbjudan till alla tr\u00e4ffar!</p>
+                        <p class="last-child">\u2705 <a href="https://www.impactloop.com/subscribe" target="_blank">Subscribe to our paid plan</a> to get unlimited access to all our journalism and invitations to our events!</p>
                       </div>
                     </td>
                   </tr>
@@ -425,7 +425,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
           <tr> 
             <td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:6px" class="mceTextBlockContainer"> 
               <div data-block-id="763" class="mceText" id="dataBlockId-763" style="width:100%"> 
-                <h2 class="last-child"> Mest l\u00e4st i veckan p\u00e5 Impact Loop </h2>
+                <h2 class="last-child">Most read on Impact Loop</h2>
               </div>
             </td>
           </tr>
@@ -457,8 +457,8 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
   <tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"> <table width="100%" style="border:0;border-radius:0;border-collapse:separate"> <tbody> <tr> <td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:12px" class="mceTextBlockContainer"> 
 
     <div data-block-id="777" class="mceText" id="dataBlockId-777" style="width:100%"> 
-      <p class="last-child"> 
-        <span style="color:#e2baba;">PS! OM DU MISSAT \u2026</span>
+      <p class="last-child">
+        <span style="color:#e2baba;">MORE NEWS ON IMPACT LOOP</span>
       </p>
     </div>
 
@@ -491,18 +491,18 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
 
     <div data-block-id="188" class="mceText" id="dataBlockId-188" style="width:100%">
       <h1>
-        Detta \u00e4r Impact Loop
+        Join Europe's leading impact investors
       </h1>
       <p>
-        <br>Vi \u00e4r ett nytt, frist\u00e5ende mediehus som varje dag h\u00e5ller 22 000+ impact-entrepren\u00f6rer, investerare och ledare loopen kring vad som h\u00e4nder inom impact. <a href="https://www.impactloop.se/om-oss" target="_blank">L\u00e4s mer om vilka vi \u00e4r och varf\u00f6r vi finns h\u00e4r</a>.
+        <br>Impact Loop is your go-to business news platform for investors (and founders) in the European impact space.
       </p>
       <p><br></p>
       <p>
-        Nyhetsbrevet \u00e4r gratis att l\u00e4sa men vill du l\u00e4sa all v\u00e5r journalistik och \u00e4ven g\u00e5 p\u00e5 v\u00e5ra meetups <a href="https://www.impactloop.se/pris"><strong>uppgradera ditt medlemskap h\u00e4r om du inte redan \u00e4r medlem!</strong></a><strong></strong>
+        \ud83d\udc49 <a href="https://www.impactloop.com/subscribe" target="_blank"><strong>Subscribe to our paid plan</strong></a> to get unlimited access to all of our journalism.
       </p>
       <p><br></p>
       <p class="last-child">
-        \ud83d\udcec Kontakta oss! Maila oss p\u00e5 <strong>fornamn@loop.se</strong>.
+        Got a news tip or want to get to know us more? <a href="mailto:sion@loop.se" target="_blank"><strong>Contact us here!</strong></a>
       </p>
     </div>
 
@@ -535,19 +535,19 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
             <td style="padding-left:16px;padding-right:16px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer">
               <div data-block-id="9" class="mceText"id="dataBlockId-9" style="display:inline-block;width:100%">
                 <p class="last-child">
-                  <em><span style="font-size: 12px">Copyright (C) Impact Loop 2024. All rights reserved.</span></em><br><br>
-                  
-                  <span style="font-size: 12px">Du f\u00e5r detta mejl eftersom du har signat upp dig p\u00e5 Impact Loops nyhetsbrev, eller f\u00f6r att vi anser inneh\u00e5llet vara relevant f\u00f6r dig i din yrkesroll.</span><br>
-                  
-                  <span style="font-size: 12px">Du kan n\u00e4r som helst </span>
-                  
-                  <a href="https://impactloop.mailchimpsites.com/manage/preferences?u=46f8b3dcdd581118cad2f80ee&id=2575eb3724&e=[UNIQID]&c=fe99aba8f5"><span style="font-size: 12px">uppdatera dina preferenser</span></a>
+                  <em><span style="font-size: 12px">Copyright (C) Impact Loop 2025. All rights reserved.</span></em><br><br>
 
-                  <span style="font-size: 12px"> eller </span>
+                  <span style="font-size: 12px">You are receiving this email because you subscribed to Impact Loop's newsletter, or your professional role has been identified as relevant to our independent journalistic content. We process your contact details based on legitimate interest and strictly for professional outreach purposes.</span><br><br>
 
-                  <a href="https://impactloop.us21.list-manage.com/unsubscribe?u=46f8b3dcdd581118cad2f80ee&id=2575eb3724&t=b&e=[UNIQID]&c=fe99aba8f5"><span style="font-size: 12px">avregistrera</span></a>
-                  
-                  <span style="font-size: 12px"> dig helt.</span>
+                  <span style="font-size: 12px">You can </span>
+
+                  <a href="https://impactloop.mailchimpsites.com/manage/preferences?u=46f8b3dcdd581118cad2f80ee&id=2575eb3724&e=[UNIQID]&c=fe99aba8f5"><span style="font-size: 12px">update your preferences</span></a>
+
+                  <span style="font-size: 12px"> or </span>
+
+                  <a href="https://impactloop.us21.list-manage.com/unsubscribe?u=46f8b3dcdd581118cad2f80ee&id=2575eb3724&t=b&e=[UNIQID]&c=fe99aba8f5"><span style="font-size: 12px">unsubscribe</span></a>
+
+                  <span style="font-size: 12px"> completely whenever you like.</span>
                 </p>
               </div>
             </td>

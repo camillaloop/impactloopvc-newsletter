@@ -132,7 +132,8 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
     '[[editorimage_placeholder]]': editor.imageUrl,
     '[[intro_placeholder]]': intro
       .replace(/\n/g, '<br>')
-      .replace(/^Godmorgon!/, '<strong>Godmorgon!</strong> ☕'),
+      .replace(/^Godmorgon!/, '<strong>Godmorgon!</strong> ☕')
+      .replace(/^Good morning!/, '<strong>Good morning!</strong> ☕'),
 
     // Sponsor / teknik
     '[[sponsor_placeholder]]': sponsorHtml,
@@ -187,12 +188,12 @@ const ARTICLE_EMOJIS = ['📣', '👁️', '💡', '🔍', '📊', '🌍', '⚡'
 
 function pickEmoji(article: SanityArticle, index: number): string {
   const cat = (article.category ?? '').toLowerCase();
-  if (cat.includes('energi')) return '⚡';
-  if (cat.includes('invest') || cat.includes('kapital')) return '💰';
-  if (cat.includes('klimat')) return '🌍';
+  if (cat.includes('energi') || cat.includes('energy')) return '⚡';
+  if (cat.includes('invest') || cat.includes('kapital') || cat.includes('capital') || cat.includes('venture')) return '💰';
+  if (cat.includes('klimat') || cat.includes('climate')) return '🌍';
   if (cat.includes('teknik') || cat.includes('tech')) return '💡';
-  if (cat.includes('mode') || cat.includes('textil')) return '👗';
-  if (cat.includes('mat') || cat.includes('livsmedel')) return '🍽️';
+  if (cat.includes('mode') || cat.includes('textil') || cat.includes('fashion')) return '👗';
+  if (cat.includes('mat') || cat.includes('livsmedel') || cat.includes('food')) return '🍽️';
   return ARTICLE_EMOJIS[index % ARTICLE_EMOJIS.length];
 }
 
@@ -337,7 +338,7 @@ function buildArticle3Html(article: SanityArticle): string {
                                 style="width:100%">
                                 <p><strong>${article.ingress}</strong></p><br>
                                 <p class="last-child">
-                                    <a href="${article.url}" target="_blank"><strong>L\u00e4s artikeln h\u00e4r \u2013\u2013\u2013&gt;</strong></a>
+                                    <a href="${article.url}" target="_blank"><strong>Read the article here ---&gt;</strong></a>
                                 </p>
                             </div>
                         </td>

@@ -34,7 +34,7 @@ function verifySlackSignature(
   const fiveMinutes = 60 * 5;
   const ageSecs = Math.abs(Date.now() / 1000 - Number(timestamp));
   if (ageSecs > fiveMinutes) {
-    console.error(`[slack-verify] Timestamp för gammal: ${ageSecs}s`);
+    console.error(`[slack-verify] Timestamp too old: ${ageSecs}s`);
     return false;
   }
 
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
     const signature = request.headers.get('x-slack-signature') ?? '';
     const timestamp = request.headers.get('x-slack-request-timestamp') ?? '';
     if (!verifySlackSignature(SLACK_SIGNING_SECRET, signature, timestamp, rawBody)) {
-      console.error('[slack/events] Signature mismatch – kontrollera SLACK_SIGNING_SECRET');
+      console.error('[slack/events] Signature mismatch – check SLACK_SIGNING_SECRET');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
   }
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
   const textWithoutMention = text.replace(/<@[A-Z0-9]+>/gi, '').trim();
 
   // ── /extrabrev [rubrikfragment] ───────────────────────────────────────────
-  const extraMatch = textWithoutMention.match(/\/extrabrev\s+(.+)/i);
+  const extraMatch = textWithoutMention.match(/\/extra\s+(.+)/i);
   if (extraMatch) {
     const titleFragment = extraMatch[1].trim();
     waitUntil(triggerExtraBrev(titleFragment, channel, threadTs).catch(console.error));
@@ -125,9 +125,9 @@ export async function POST(request: Request) {
   }
 
   // Kolla om meddelandet innehåller /nyhetsbrev eller slutar med "kör"
-  const hasGo = /\/nyhetsbrev\b/i.test(textWithoutMention) || /\bkör\s*$/i.test(textWithoutMention);
-  // Rensa bort /nyhetsbrev och "kör" från instruktionen
-  const cleanText = textWithoutMention.replace(/\/nyhetsbrev\b/gi, '').replace(/\bkör\s*$/i, '').trim();
+  const hasGo = /\/newsletter\b/i.test(textWithoutMention) || /\bgo\s*$/i.test(textWithoutMention);
+  // Rensa bort /newsletter och "go" från instruktionen
+  const cleanText = textWithoutMention.replace(/\/newsletter\b/gi, '').replace(/\bgo\s*$/i, '').trim();
 
   console.log('[slack/events] hasGo:', hasGo, 'cleanText length:', cleanText.length);
 
@@ -146,23 +146,23 @@ export async function POST(request: Request) {
 }
 
 async function triggerCollect(channel: string, threadTs: string, mode: 'auto' | 'manual' = 'auto') {
-  const modeText = mode === 'manual' ? '⚙️ Kör brev med dina instruktioner...' : '⚙️ Kör automatiskt brev – hämtar schemalagda artiklar...';
+  const modeText = mode === 'manual' ? '⚙️ Building newsletter with your instructions...' : '⚙️ Building newsletter automatically – fetching scheduled articles...';
   await replyInThread(channel, threadTs, modeText);
   try {
     const result = await runCollect(mode);
-    await replyInThread(channel, threadTs, `✅ Brevet är byggt!\n👉 ${result.dashboardUrl}`);
+    await replyInThread(channel, threadTs, `✅ Newsletter built!\n👉 ${result.dashboardUrl}`);
   } catch (err) {
-    await replyInThread(channel, threadTs, `❌ Något gick fel: ${String(err)}`);
+    await replyInThread(channel, threadTs, `❌ Something went wrong: ${String(err)}`);
   }
 }
 
 async function processInstruction(text: string, channel: string, threadTs: string, triggerAfter = false) {
   try {
-    await replyInThread(channel, threadTs, '🔄 Tolkar instruktionen...');
+    await replyInThread(channel, threadTs, '🔄 Parsing instruction...');
 
     const parsed = await parseInstruction(text);
     if (!parsed || ((parsed.articleFragments ?? []).length === 0 && !parsed.editorName && !parsed.psFragment && !parsed.swapArticle && (parsed.svepHints ?? []).length === 0)) {
-      await replyInThread(channel, threadTs, '❓ Kunde inte tolka instruktionen. Försök t.ex: "Byt översta artikeln mot [rubrik]" eller "artiklar: [rubrik 1], [rubrik 2] /nyhetsbrev"');
+      await replyInThread(channel, threadTs, '❓ Could not parse the instruction. Try e.g.: "Swap the top article for [headline]" or "articles: [headline 1], [headline 2] /newsletter"');
       return;
     }
 
@@ -188,33 +188,33 @@ async function processInstruction(text: string, channel: string, threadTs: strin
     const summary = resolved.confirmationLines.join('\n');
 
     if (triggerAfter) {
-      await replyInThread(channel, threadTs, `✅ *Instruktion sparad!*\n\n${summary}\n\n⚙️ Kör collect nu...`);
+      await replyInThread(channel, threadTs, `✅ *Instruction saved!*\n\n${summary}\n\n⚙️ Running collect now...`);
       await triggerCollect(channel, threadTs, 'manual');
     } else {
       await replyInThread(
         channel,
         threadTs,
-        `✅ *Instruktion sparad för nästa brev!*\n\n${summary}\n\n_Skriv \`/nyhetsbrev\` när du vill köra._`
+        `✅ *Instruction saved for next newsletter!*\n\n${summary}\n\n_Write \`/newsletter\` when you want to run it._`
       );
     }
   } catch (err) {
     console.error('[slack/events] processInstruction error:', err);
-    await replyInThread(channel, threadTs, `❌ Något gick fel: ${String(err)}`);
+    await replyInThread(channel, threadTs, `❌ Something went wrong: ${String(err)}`);
   }
 }
 
 async function triggerExtraBrev(titleFragment: string, channel: string, threadTs: string) {
-  await replyInThread(channel, threadTs, `🔍 Söker artikel för extrabrev: _"${titleFragment}"_...`);
+  await replyInThread(channel, threadTs, `🔍 Searching for article for extra newsletter: _"${titleFragment}"_...`);
   try {
     const result = await createExtraBrev(titleFragment);
-    const captionDebug = result.imageCaption ? `🖼 Bildtext: _${result.imageCaption}_\n` : `🖼 Bildtext: _(saknas)_\n`;
+    const captionDebug = result.imageCaption ? `🖼 Caption: _${result.imageCaption}_\n` : `🖼 Caption: _(missing)_\n`;
     await replyInThread(
       channel,
       threadTs,
-      `✅ *Extrabrev skapat i Mailchimp!*\n📰 Artikel: *${result.articleTitle}*\n📧 Ämnesrad: _${result.subject}_\n${captionDebug}\n<${result.editUrl}|Öppna i Mailchimp →>`
+      `✅ *Extra newsletter created in Mailchimp!*\n📰 Article: *${result.articleTitle}*\n📧 Subject: _${result.subject}_\n${captionDebug}\n<${result.editUrl}|Open in Mailchimp →>`
     );
   } catch (err) {
-    await replyInThread(channel, threadTs, `❌ Något gick fel: ${String(err)}`);
+    await replyInThread(channel, threadTs, `❌ Something went wrong: ${String(err)}`);
   }
 }
 
@@ -225,13 +225,13 @@ async function swapArticleInDraft(
 ) {
   const draft = await getLatestDraft();
   if (!draft) {
-    await replyInThread(channel, threadTs, '⚠️ Hittade inget aktuellt utkast att uppdatera.');
+    await replyInThread(channel, threadTs, '⚠️ No current draft found to update.');
     return;
   }
 
   const article = await fetchArticleById(swap.articleId);
   if (!article) {
-    await replyInThread(channel, threadTs, `⚠️ Kunde inte hämta artikeln.`);
+    await replyInThread(channel, threadTs, `⚠️ Could not fetch the article.`);
     return;
   }
 
@@ -297,6 +297,6 @@ async function swapArticleInDraft(
   await replyInThread(
     channel,
     threadTs,
-    `✅ *Artikel ${swap.position} bytt!*\nNy artikel: *${article.title}*\n👉 ${BASE_URL}/dashboard?draft=${draft.id}`
+    `✅ *Article ${swap.position} swapped!*\nNew article: *${article.title}*\n👉 ${BASE_URL}/dashboard?draft=${draft.id}`
   );
 }
