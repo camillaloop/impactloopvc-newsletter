@@ -18,7 +18,7 @@ import { buildPlaceholders } from '@/lib/placeholders';
 import { getEditorForDate } from '@/lib/editors';
 import { createExtraBrev } from '@/lib/extra-brev';
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET ?? '';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN ?? '';
