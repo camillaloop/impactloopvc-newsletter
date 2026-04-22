@@ -27,20 +27,20 @@ async function mcGet(path: string, params: Record<string, string | number> = {})
 function extractIntro(plainText: string): string | null {
   const text = plainText.replace(/\r\n/g, '\n').trim();
 
-  // Find start: "Good morning" (or similar greeting line)
-  const startMatch = text.match(/(Good morning[^\n]*\n)/i);
+  // Find start: "Good morning" line
+  const startMatch = text.match(/Good morning[^\n]*/i);
   if (!startMatch) return null;
 
   const introStart = startMatch.index!;
 
-  // Find end: "In today's newsletter"
+  // Find end: "In today's newsletter" — stop right before it
   const endMatch = text.slice(introStart).match(/In today'?s newsletter/i);
-  const endOffset = endMatch ? endMatch.index! : 800;
+  if (!endMatch) return null;
 
-  let intro = text.slice(introStart, introStart + endOffset).trim();
+  let intro = text.slice(introStart, introStart + endMatch.index!).trim();
 
-  // Remove bare URLs
-  intro = intro.replace(/https?:\/\/\S+/g, '').replace(/\s{2,}/g, ' ').trim();
+  // Remove bare URLs and tidy whitespace
+  intro = intro.replace(/https?:\/\/\S+/g, '').replace(/[ \t]+/g, ' ').trim();
 
   return intro.length > 50 ? intro : null;
 }
