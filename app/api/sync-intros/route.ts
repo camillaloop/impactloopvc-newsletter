@@ -33,8 +33,8 @@ function extractIntro(plainText: string): string | null {
 
   const introStart = startMatch.index!;
 
-  // Find end: "In today's newsletter" — stop right before it
-  const endMatch = text.slice(introStart).match(/In today'?s newsletter/i);
+  // Find end: "In today's newsletter" — handle straight and curly apostrophes
+  const endMatch = text.slice(introStart).match(/In today[\u2019's]s newsletter/i);
   if (!endMatch) return null;
 
   let intro = text.slice(introStart, introStart + endMatch.index!).trim();
