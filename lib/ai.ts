@@ -28,14 +28,13 @@ export interface SvepetResult {
 
 // ─── Intro ────────────────────────────────────────────────────────────────────
 
-/** Hämtar de 10 senaste introna för en specifik redaktör från Supabase */
-async function fetchEditorExamples(editorName: string): Promise<string[]> {
+/** Fetches the 10 most recent intro examples from Supabase */
+async function fetchEditorExamples(_editorName: string): Promise<string[]> {
   try {
     const { supabase } = await import('./supabase');
     const { data } = await supabase
-      .from('editor_intro_examples')
+      .from('vc_intro_examples')
       .select('intro_text')
-      .eq('editor_name', editorName)
       .order('send_time', { ascending: false })
       .limit(10);
     return (data ?? []).map((r: { intro_text: string }) => r.intro_text);
