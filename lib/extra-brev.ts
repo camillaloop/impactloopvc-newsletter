@@ -127,7 +127,7 @@ export async function createExtraBrev(titleFragment: string): Promise<ExtraBrevR
         preview_text: preview,
         title: `EXTRA ${dateStr}`,
         from_name: 'Impact Loop VC',
-        reply_to: 'info@impactloop.com',
+        reply_to: 'info@loop.se',
         auto_footer: false,
       },
     }),
