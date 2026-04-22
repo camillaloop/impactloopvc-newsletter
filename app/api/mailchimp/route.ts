@@ -146,7 +146,7 @@ export async function POST(req: Request) {
                 preview_text: draft.preheader || subject,
                 title,
                 from_name: 'Impact Loop VC',
-                reply_to: 'info@loop.se',
+                reply_to: 'info@impactloop.com',
               },
             }),
           });
@@ -198,8 +198,8 @@ export async function POST(req: Request) {
           settings: {
             subject_line: `[TEST] ${subject}`,
             title: `[TEST] ${campaignTitle}`,
-            from_name: 'Impact Loop',
-            reply_to: 'info@loop.se',
+            from_name: 'Impact Loop VC',
+            reply_to: 'info@impactloop.com',
           },
         }),
       });
