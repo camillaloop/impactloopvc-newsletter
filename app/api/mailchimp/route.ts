@@ -63,12 +63,30 @@ export async function POST(req: Request) {
 
     // Bygg placeholders med korrekt segment
     const isBetalande = segment === 'betalande';
-    const editorDate = new Date();
-    const day = draft.editor_day ?? editorDate.getDay();
-    const targetDate = new Date();
-    const diff = day - targetDate.getDay();
-    targetDate.setDate(targetDate.getDate() + diff);
-    const editor = getEditorForDate(targetDate);
+
+    // Hämta editor från sparade placeholders (bevarar eventuell Slack-override)
+    // Fallback till roteringsschema om placeholders saknas
+    const savedPlaceholders = (draft.placeholders ?? {}) as Record<string, string>;
+    const editorFromPlaceholders = savedPlaceholders['[[editor_placeholder]]'];
+    const editorEmailFromPlaceholders = savedPlaceholders['[[editoremail_placeholder]]'];
+    const editorImageFromPlaceholders = savedPlaceholders['[[editorimage_placeholder]]'];
+
+    let editor;
+    if (editorFromPlaceholders && editorEmailFromPlaceholders) {
+      editor = {
+        name: editorFromPlaceholders,
+        email: editorEmailFromPlaceholders,
+        title: '', // fylls ej i placeholder men används inte i templaten direkt
+        imageUrl: editorImageFromPlaceholders ?? '',
+      };
+    } else {
+      const editorDate = new Date();
+      const day = draft.editor_day ?? editorDate.getDay();
+      const targetDate = new Date();
+      const diff = day - targetDate.getDay();
+      targetDate.setDate(targetDate.getDate() + diff);
+      editor = getEditorForDate(targetDate);
+    }
 
     const draftData = {
       editor,
