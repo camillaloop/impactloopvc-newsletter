@@ -113,9 +113,7 @@ export async function fetchMostRead(): Promise<MostReadArticle[]> {
   }
 
   const body = {
-    // Tillfälligt fast datumintervall – sajten flyttades 21 april och GA4-kopplingen är bruten
-    // TODO: Återställ till '7daysAgo'/'yesterday' när GA4 är återkopplat till nya sajten
-    dateRanges: [{ startDate: '2026-04-14', endDate: '2026-04-21' }],
+    dateRanges: [{ startDate: '7daysAgo', endDate: 'yesterday' }],
     dimensions: [{ name: 'pageTitle' }, { name: 'pagePath' }],
     metrics: [{ name: 'sessions' }],
     dimensionFilter: {
