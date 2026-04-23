@@ -185,7 +185,7 @@ export async function generateSubjectLines(
 
   const msg = await getClient().messages.create({
     model: 'claude-opus-4-5',
-    max_tokens: 200,
+    max_tokens: 400,
     messages: [
       {
         role: 'user',
