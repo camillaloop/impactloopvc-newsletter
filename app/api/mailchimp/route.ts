@@ -17,9 +17,9 @@ const MC_LIST = process.env.MAILCHIMP_LIST_ID!;
 const BASE = `https://${MC_SERVER}.api.mailchimp.com/3.0`;
 const AUTH = 'Basic ' + Buffer.from(`anystring:${MC_KEY}`).toString('base64');
 
-// Mailchimp segment IDs
-const SEGMENT_BETALANDE = '2966632';
-const SEGMENT_GRATIS = '2976784';
+// Mailchimp segment IDs (Impact Loop Europe list b46477bf08)
+const SEGMENT_BETALANDE = '3452658';
+const SEGMENT_GRATIS = '3452659';
 
 async function mcFetch(path: string, options: RequestInit = {}) {
   const res = await fetch(`${BASE}${path}`, {
