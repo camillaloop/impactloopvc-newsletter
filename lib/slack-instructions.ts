@@ -48,12 +48,12 @@ export async function parseInstruction(text: string): Promise<ParsedInstruction 
         role: 'user',
         content: `You are a tool that analyses newsletter instructions.
 
-Redaktörerna heter: Andreas Jennische, Jenny Kjellén, Johann Bernövall, Camilla Bergman.
-Set editorName ONLY if one of these names is mentioned explicitly.
+The editors are: Siôn Geschwindt (also written "Sion"), Camilla Bergman.
+Set editorName if any of these names (or first names only: "Siôn", "Sion", "Camilla") are mentioned in any context — e.g. "Intro from Camilla", "Camilla writes intro", "Intro: Camilla", "Sion writes today", "let Siôn do the intro" all mean editorName = that person's full name.
 Article fragments are headlines or parts of article headlines — NOT personal names that are not editors listed above.
 
 Extract these fields (omit fields not mentioned):
-- editorName: string — ONLY if one of the editors above is mentioned
+- editorName: string — ONLY if one of the editors above is mentioned (use full name: "Siôn Geschwindt" or "Camilla Bergman")
 - articleFragments: string[] — parts of article headlines to use in the newsletter (1–3 items)
 - psFragment: string — part of the PS article headline
 - svepHints: string[] — if the user wants the Impact Roundup to include a specific news item. Each hint is a brief description of the news/topic/company (e.g. "Northvolt", "Volvo EV batteries", "EU taxonomy"). Used when the instruction mentions the roundup or roundup news.
