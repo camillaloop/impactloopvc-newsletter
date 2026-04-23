@@ -299,10 +299,9 @@ ${mustIncludeBlock}
 Impact Loop VC is aimed at European impact startups, entrepreneurs and investors. They want to know what is happening in their sector and beyond – not general sustainability awareness.
 
 PRIORITISE (in order):
-1. European impact companies with concrete news (raise, launch, partnership, leadership change)
-2. Reports/studies with figures and business relevance for European impact investors
-3. Well-known international companies with relevant sector news
-4. EU/policy with direct consequences for European companies and investors
+1. Reports/studies with figures and business relevance for European impact investors
+2. Well-known international companies with relevant sector news
+3. EU/policy with direct consequences for European companies and investors
 
 EXCLUDE: general politics without an impact/sustainability angle, large listed companies without a sustainability angle, natural disasters without market relevance, lifestyle advice. ALSO EXCLUDE: press releases that are merely certification announcements, labelling notices or similar without a concrete business story (new product, new service, new investment, new partnership, new study with figures).
 
@@ -322,7 +321,7 @@ Rules for the format:
 - Headline: 3–5 words specific to today's theme (never "Impact today")
 - Emoji: matches the topic exactly
 - Bold headline: max 7 words, concrete and news-driven
-- Body text: MAXIMUM ONE sentence, approx. 15–20 words. The core of the news item + source. Nothing more. Example: "Snack giant Mondelēz has created the world's first chocolate made with cell-based cocoa butter, reports Green Queen." NOT two sentences, NOT background, NOT explanations.
+- Body text: MAXIMUM ONE sentence, approx. 15–20 words. The core of the news item + source name as a hyperlink. Nothing more. Example: "Snack giant Mondelēz has created the world's first chocolate made with cell-based cocoa butter, reports <a href="https://greenqueen.com/article">Green Queen</a>." The source name in the body MUST be wrapped in an <a href="[article url]"> tag linking to the article. NOT two sentences, NOT background, NOT explanations.
 - link: exact URL from the news list
 - source: EXACTLY the same text as you write in the body (e.g. if you write "reports Bloomberg" → source: "Bloomberg", if you write "writes Green Queen" → source: "Green Queen", if you write "according to the FT" → source: "FT")
 - Mix where possible: one company/startup + one report + one EU/sector news item
