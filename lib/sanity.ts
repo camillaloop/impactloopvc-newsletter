@@ -107,7 +107,7 @@ export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
   // 1. Hämta poster (inkl. drafts) med publishTo: impact-loop-vc
   // perspective=raw ger oss drafts.* (artiklar som ännu inte publicerats)
   const scheduledQuery = `
-    *[(_type == "post" || _type == "postEnglish") && "impact-loop-vc" in publishTo && defined(publishedAt)]
+    *[_type == "post" && "impact-loop-vc" in publishTo && defined(publishedAt)]
     | order(publishedAt desc)
     [0...10]
     ${baseProjection}
@@ -133,7 +133,7 @@ export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
   // 2. Fyll på med senaste poster (inkl. drafts) om färre än 4
   if (result.length < 4) {
     const recentQuery = `
-      *[(_type == "post" || _type == "postEnglish") && "impact-loop-vc" in publishTo && defined(publishedAt)]
+      *[_type == "post" && "impact-loop-vc" in publishTo && defined(publishedAt)]
       | order(publishedAt desc)
       [0...20]
       ${baseProjection}
