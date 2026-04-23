@@ -28,15 +28,26 @@ export async function fetchFundingRounds(): Promise<FundingRow[]> {
   const articles: Array<{ title: string; description: string; date: string }> =
     data.articles ?? data ?? [];
 
-  // Filter to last 7 days
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - 7);
-  const recent = articles.filter((a) => new Date(a.date) >= cutoff);
+  // Try last 2 days first, fallback to 3 days
+  let cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 2);
+  let recent = articles.filter((a) => new Date(a.date) >= cutoff);
 
-  console.log(`[funding] ${recent.length} articles from last 7 days`);
+  if (!recent.length) {
+    cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 3);
+    recent = articles.filter((a) => new Date(a.date) >= cutoff);
+    console.log(`[funding] No articles in last 2 days, trying 3 days: ${recent.length} found`);
+  } else {
+    console.log(`[funding] ${recent.length} articles from last 2 days`);
+  }
+
   if (!recent.length) return [];
 
-  // Use Claude to extract structured data
+  // Sort newest first
+  recent.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Use Claude to extract structured data (impact/sustainability only)
   return extractFundingRows(recent);
 }
 
@@ -51,27 +62,44 @@ async function extractFundingRows(
     .map((a, i) => `${i + 1}. Title: ${a.title}\n   Description: ${a.description}`)
     .join('\n\n');
 
-  const prompt = `You are extracting structured data from funding round news articles.
+  const prompt = `You are extracting structured data from funding round news articles for an impact investing newsletter.
 
-For each article below, extract the following fields:
+STRICT INCLUSION CRITERIA — only include an article if ALL of these are true:
+1. It is clearly about a specific company raising a funding round (seed, Series A/B/C, grant, etc.)
+2. The company operates in an impact, sustainability or climate-related sector. This includes:
+   - Climate tech, clean energy, green energy, renewables, hydrogen
+   - Sustainable mobility, electric vehicles, public transport
+   - Circular economy, waste reduction, recycling
+   - Agritech, foodtech, alternative proteins, sustainable food
+   - Nature, biodiversity, ocean, conservation tech
+   - Industrial sustainability, green manufacturing, emissions reduction
+   - Impact investing, ESG, social impact
+   - Biotech with sustainability or health equity angle
+
+SKIP any article that is:
+- About a company with no sustainability angle (pure SaaS, fintech, gaming, ads, etc.)
+- An opinion piece, market report, or not about a specific funding round
+- A press release without clear company + amount
+
+For each qualifying article, extract:
 - company: The name of the company that received funding
 - whatTheyDo: A very short description of what the company does (max 6 words, plain English)
-- niche: One of: Agritech, Foodtech, Energy, Cleantech, Mobility, Deeptech, Software, Circularity, Impact, Climate, Biotech, Other
+- niche: One of: Agritech, Foodtech, Clean Energy, Cleantech, Mobility, Circular Economy, Climate, Nature, Biotech, Industrial
 - funding: The funding amount (e.g. €15m, $2M, £10m). If not mentioned, write "N/A"
 - investors: Names of lead investors. If not mentioned, write "N/A"
-- location: Country flag emoji of the company's headquarters (e.g. 🇸🇪 for Sweden, 🇬🇧 for UK, 🇩🇪 for Germany, 🇫🇷 for France, 🇳🇱 for Netherlands, 🇫🇮 for Finland, 🇩🇰 for Denmark, 🇳🇴 for Norway, 🇺🇸 for USA). If unknown, use 🌍
+- location: Country flag emoji (e.g. 🇸🇪 🇬🇧 🇩🇪 🇫🇷 🇳🇱 🇫🇮 🇩🇰 🇳🇴 🇺🇸 🇪🇸 🇮🇹 🇧🇪 🇦🇹 🇨🇭). If unknown, use 🌍
 
-Only include articles that are clearly about a company raising funding. Skip press releases, opinion pieces, or articles that are not about a specific funding round.
+Return ONLY a JSON array with no other text. If no articles qualify, return [].
 
-Return ONLY a JSON array with no other text. Example format:
+Example:
 [
   {
     "company": "Nox Mobility",
     "whatTheyDo": "Private sleeper cabins for night trains",
     "niche": "Mobility",
     "funding": "€2M",
-    "investors": "N/A",
-    "location": "🇸🇪"
+    "investors": "IBB Ventures",
+    "location": "🇩🇪"
   }
 ]
 

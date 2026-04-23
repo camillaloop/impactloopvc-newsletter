@@ -11,7 +11,7 @@ export interface Editor {
 const SION: Editor = {
   name: 'Siôn Geschwindt',
   email: 'sion@loop.se',
-  title: 'Managing editor, Impact Loop VC',
+  title: 'Managing editor',
   imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
 };
 
