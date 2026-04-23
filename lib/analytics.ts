@@ -96,8 +96,21 @@ export async function fetchMostRead(): Promise<MostReadArticle[]> {
     return [];
   }
 
-  const sa: ServiceAccount = { client_email: GA4_CLIENT_EMAIL, private_key: GA4_PRIVATE_KEY };
-  const accessToken = await getAccessToken(sa);
+  if (!GA4_PROPERTY_ID) {
+    console.warn('[analytics] GA4_PROPERTY_ID saknas – returnerar tom lista');
+    return [];
+  }
+
+  console.log('[analytics] Fetching GA4 most read, property:', GA4_PROPERTY_ID.slice(0, 6) + '...');
+
+  let accessToken: string;
+  try {
+    const sa: ServiceAccount = { client_email: GA4_CLIENT_EMAIL, private_key: GA4_PRIVATE_KEY };
+    accessToken = await getAccessToken(sa);
+  } catch (e) {
+    console.error('[analytics] GA4 token error:', String(e));
+    return [];
+  }
 
   const body = {
     // Tillfälligt fast datumintervall – sajten flyttades 21 april och GA4-kopplingen är bruten
@@ -129,12 +142,13 @@ export async function fetchMostRead(): Promise<MostReadArticle[]> {
 
   if (!res.ok) {
     const text = await res.text();
-    console.error('GA4 report failed:', text);
+    console.error('[analytics] GA4 report failed:', text);
     return [];
   }
 
   const data = await res.json();
   const rows = data.rows ?? [];
+  console.log(`[analytics] GA4 returned ${rows.length} rows`);
 
   return rows
     .map(
