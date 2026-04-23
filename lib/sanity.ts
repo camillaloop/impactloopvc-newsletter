@@ -107,7 +107,7 @@ export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
   // 1. Hämta poster (inkl. drafts) med publishTo: impact-loop-vc
   // perspective=raw ger oss drafts.* (artiklar som ännu inte publicerats)
   const scheduledQuery = `
-    *[_type == "postEnglish" && "impact-loop-vc" in publishTo && defined(publishedAt)]
+    *[(_type == "post" || _type == "postEnglish") && "impact-loop-vc" in publishTo && defined(publishedAt)]
     | order(publishedAt desc)
     [0...10]
     ${baseProjection}
@@ -115,14 +115,17 @@ export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
 
   const scheduledRaw = await sanityFetch<RawPost[]>(scheduledQuery, 'raw').catch(() => [] as RawPost[]);
 
-  // Deduplicera på base-ID (en artikel kan finnas som både draft och publicerad)
+  // Deduplicera på base-ID och titel (en artikel kan finnas som både post och postEnglish)
   const seenBaseIds = new Set<string>();
+  const seenTitles = new Set<string>();
   const result: SanityArticle[] = [];
 
   for (const raw of scheduledRaw) {
     const baseId = extractBaseId(raw._id);
-    if (!seenBaseIds.has(baseId) && result.length < 4) {
+    const titleKey = (raw.title ?? '').toLowerCase().trim();
+    if (!seenBaseIds.has(baseId) && !seenTitles.has(titleKey) && result.length < 4) {
       seenBaseIds.add(baseId);
+      if (titleKey) seenTitles.add(titleKey);
       result.push(mapPost({ ...raw, _id: baseId }));
     }
   }
@@ -130,7 +133,7 @@ export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
   // 2. Fyll på med senaste poster (inkl. drafts) om färre än 4
   if (result.length < 4) {
     const recentQuery = `
-      *[_type == "postEnglish" && "impact-loop-vc" in publishTo && defined(publishedAt)]
+      *[(_type == "post" || _type == "postEnglish") && "impact-loop-vc" in publishTo && defined(publishedAt)]
       | order(publishedAt desc)
       [0...20]
       ${baseProjection}
@@ -140,8 +143,10 @@ export async function fetchNewsletterArticles(): Promise<SanityArticle[]> {
 
     for (const raw of recent) {
       const baseId = extractBaseId(raw._id);
-      if (!seenBaseIds.has(baseId) && result.length < 4) {
+      const titleKey = (raw.title ?? '').toLowerCase().trim();
+      if (!seenBaseIds.has(baseId) && !seenTitles.has(titleKey) && result.length < 4) {
         seenBaseIds.add(baseId);
+        if (titleKey) seenTitles.add(titleKey);
         result.push(mapPost(raw));
       }
       if (result.length >= 4) break;
