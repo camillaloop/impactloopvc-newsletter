@@ -9,7 +9,7 @@ import { fetchNewsFeed } from './news-feed';
 import { fetchMeetups } from './sheets';
 import { fetchFundingRounds, buildFundingTableHtml } from './funding';
 import { buildPlaceholders } from './placeholders';
-import { getEditorForDate } from './editors';
+import { getEditorForDate, EDITORS } from './editors';
 import { createDraft, getLatestPendingInstruction, markInstructionApplied } from './supabase';
 import type { NewsletterDraftData } from './placeholders';
 
@@ -43,6 +43,13 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
 
   // Redaktör: pending instruction > roteringsschema (imorgondagens redaktör)
   const editor = pendingInstruction?.editor_override ?? getEditorForDate(tomorrow);
+
+  // editor_day: om override finns, hitta rätt dag för den editorn så dashboarden visar rätt
+  const editorDayNum = pendingInstruction?.editor_override
+    ? (Object.entries(EDITORS).find(([, e]) => e.name === editor.name)?.[0]
+        ? parseInt(Object.entries(EDITORS).find(([, e]) => e.name === editor.name)![0])
+        : tomorrow.getDay())
+    : tomorrow.getDay();
 
   // 1. Hämta artiklar från Sanity
   console.log('[collect] Fetching Sanity articles...');
@@ -159,7 +166,7 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
     article3_data: article3 ?? null,
     svepet_data: svepet,
     meetups_data: meetups,
-    editor_day: tomorrow.getDay(),
+    editor_day: editorDayNum,
   });
 
   // 7. Markera pending instruction som tillämpad
