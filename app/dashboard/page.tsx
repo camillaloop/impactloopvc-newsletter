@@ -751,11 +751,6 @@ export default function DashboardPage() {
         {/* ─── Mest läst ─── */}
         <MostReadSection draft={draft} />
 
-        {/* ─── Meetups ─── */}
-        <Section title="Meetups &amp; event">
-          <MeetupsEditor meetups={meetups} onChange={setMeetups} />
-        </Section>
-
         {/* ─── Toggles ─── */}
         <Section title="Extra sections">
           <div className="flex gap-8">
