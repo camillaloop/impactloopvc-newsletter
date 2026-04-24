@@ -220,7 +220,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
 
   <!-- End of Article 1 section -->
 
-  <tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:24px;padding-left:24px" class="mceBlockContainer" valign="top"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" role="presentation" class="mceDividerContainer" data-block-id="726"> <tbody> <tr> <td style="min-width:100%;border-top-width:1px;border-top-style:solid;border-top-color:#e5e6d2" class="mceDividerBlock" valign="top"></td> </tr> </tbody> </table> </td> </tr>
+  [[subscriptionmessage_placeholder]]
 
   <!-- Article 2 section -->
 

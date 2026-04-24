@@ -120,6 +120,38 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
     ? `\n<tr>\n  <td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:24px;padding-left:24px" class="mceBlockContainer" valign="top">\n    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" role="presentation" class="mceDividerContainer">\n      <tbody>\n        <tr>\n          <td style="min-width:100%;border-top-width:1px;border-top-style:solid;border-top-color:#e5e6d2" class="mceDividerBlock" valign="top"></td>\n        </tr>\n      </tbody>\n    </table>\n  </td>\n</tr>`
     : '';
 
+  const divider = `<tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:24px;padding-left:24px" class="mceBlockContainer" valign="top"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" role="presentation" class="mceDividerContainer"><tbody><tr><td style="min-width:100%;border-top-width:1px;border-top-style:solid;border-top-color:#e5e6d2;line-height:0;font-size:0" valign="top" class="mceDividerBlock">&nbsp;</td></tr></tbody></table></td></tr>`;
+
+  // Subscription upsell: shown between article 1 and article 2 for free subscribers only.
+  // Paid subscribers just get a divider.
+  const subscriptionMessageHtml = isBetalande
+    ? divider
+    : `${divider}
+  <tr>
+    <td style="padding-top:0;padding-bottom:0;padding-right:12px;padding-left:12px" valign="top">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate" role="presentation">
+        <tbody>
+          <tr>
+            <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top">
+              <table width="100%" style="border:0;background-color:#f2f2f2;border-radius:10px;border-collapse:separate">
+                <tbody>
+                  <tr>
+                    <td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer">
+                      <div class="mceText" style="width:100%">
+                        <p class="last-child"><strong>Follow the lead of Europe's smartest impact investors</strong> by joining Impact Loop! Daily independent journalism to keep you in the loop. Get your <a href="https://www.impactloop.com/subscribe?utm_source=newsletter&amp;utm_medium=text-block">subscription plan here</a>!</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  ${divider}`;
+
   return {
     '[[subjectfield_placeholder]]': subject,
     '[[previewtext_placeholder]]': previewText,
@@ -135,9 +167,10 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
       .replace(/^Godmorgon!/, '<strong>Godmorgon!</strong>')
       .replace(/^Good morning!/, '<strong>Good morning!</strong>'),
 
-    // Sponsor / teknik
+    // Sponsor / teknik / subscription upsell
     '[[sponsor_placeholder]]': sponsorHtml,
     '[[teknik_placeholder]]': teknikHtml,
+    '[[subscriptionmessage_placeholder]]': subscriptionMessageHtml,
 
     // Artikel 1
     '[[headline1_placeholder]]': article1.title,
