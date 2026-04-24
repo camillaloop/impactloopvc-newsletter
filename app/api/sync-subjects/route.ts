@@ -93,7 +93,7 @@ export async function POST() {
 
     // Upsert into subject_line_examples
     const { error } = await supabase
-      .from('subject_line_examples')
+      .from('vc_subject_line_examples')
       .upsert(top100, { onConflict: 'campaign_id' });
 
     if (error) throw new Error(`Supabase upsert: ${error.message}`);
