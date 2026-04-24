@@ -245,8 +245,8 @@ function buildTableOfContents(
 
   // Svepet-rad: svepetets första emoji + headline (ingen länk)
   const svepetEmoji = (svepet as SvepetResult).items?.[0]?.emoji ?? '📰';
-  const svepetHeadline = (svepet as SvepetResult).headline ?? (svepet as SvepetData).headline ?? '';
-  if (svepetHeadline) articleItems.push(`${svepetEmoji} ${svepetHeadline}`);
+  const svepetItem1Title = (svepet as SvepetResult).items?.[0]?.boldTitle ?? (svepet as SvepetData).items?.[0]?.boldTitle ?? '';
+  if (svepetItem1Title) articleItems.push(`${svepetEmoji} ${svepetItem1Title}`);
 
   return articleItems.map(item => `<p>${item}</p>`).join('\n');
 }
