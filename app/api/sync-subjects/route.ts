@@ -91,9 +91,9 @@ export async function POST() {
     rows.sort((a, b) => b.open_rate - a.open_rate);
     const top100 = rows.slice(0, 100);
 
-    // Upsert into vc_subject_line_examples
+    // Upsert into subject_line_examples
     const { error } = await supabase
-      .from('vc_subject_line_examples')
+      .from('subject_line_examples')
       .upsert(top100, { onConflict: 'campaign_id' });
 
     if (error) throw new Error(`Supabase upsert: ${error.message}`);

@@ -106,7 +106,7 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
   console.log('[collect] Generating AI content...');
   const [intro, subjectOptions, svepet, tocLabels] = await Promise.all([
     generateIntro(articles.slice(0, 2), editor.name),
-    generateSubjectLines(articles.slice(0, 2)),
+    generateSubjectLines(articles.slice(0, 3)),
     generateImpactSvepet(newsFeed, pendingInstruction?.svep_hints ?? []),
     generateTocLabels([article1, article2, article3].filter(Boolean) as typeof articles),
   ]);

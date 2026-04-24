@@ -113,7 +113,7 @@ body, #bodyTable { background-color: rgb(244, 244, 244); }
 <tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top">
 <table width="100%" style="border:0;border-collapse:separate"><tbody><tr>
 <td style="padding-left:24px;padding-right:24px;padding-top:24px;padding-bottom:12px" class="mceTextBlockContainer">
-<div class="mceText" style="width:100%"><p class="last-child"><span style="color:#e2baba;">JUST IN</span></p></div>
+<div class="mceText" style="width:100%"><p class="last-child"><span style="color:#d0c4de;">JUST IN</span></p></div>
 </td></tr></tbody></table>
 </td></tr>
 
