@@ -437,6 +437,52 @@ function FundingEditor({
   );
 }
 
+// ─── Innehållsförteckning-editor ─────────────────────────────────────────────
+
+function parseTocHtml(html: string): string[] {
+  const matches = html.match(/<p>([^<]*)<\/p>/g) ?? [];
+  return matches.map((p) => p.replace(/<\/?p>/g, ''));
+}
+
+function serializeTocLines(lines: string[]): string {
+  return lines.map((l) => `<p>${l}</p>`).join('\n');
+}
+
+function TocEditor({
+  lines,
+  onChange,
+}: {
+  lines: string[];
+  onChange: (lines: string[]) => void;
+}) {
+  const update = (i: number, val: string) => {
+    const updated = [...lines];
+    updated[i] = val;
+    onChange(updated);
+  };
+
+  return (
+    <div className="space-y-2">
+      <p className="text-xs text-gray-400 mb-1">
+        Each row is one line in the table of contents. Include emoji in the text (e.g. ⚡ Headline).
+      </p>
+      {lines.map((line, i) => (
+        <div key={i} className="flex items-center gap-2">
+          <span className="text-xs text-gray-400 w-4 shrink-0">{i + 1}</span>
+          <input
+            className="input flex-1"
+            value={line}
+            onChange={(e) => update(i, e.target.value)}
+          />
+        </div>
+      ))}
+      {lines.length === 0 && (
+        <p className="text-sm text-gray-400 italic">No table of contents generated yet.</p>
+      )}
+    </div>
+  );
+}
+
 // ─── Mest läst ────────────────────────────────────────────────────────────────
 
 function MostReadSection({ draft }: { draft: NewsletterDraft | null }) {
@@ -513,6 +559,7 @@ export default function DashboardPage() {
   const [article3, setArticle3] = useState<ArticleData | null>(null);
   const [meetups, setMeetups] = useState<MeetupData[]>([]);
   const [editorDay, setEditorDay] = useState<number>(1);
+  const [tocLines, setTocLines] = useState<string[]>([]);
 
   // Ladda draft från URL-param eller senaste
   useEffect(() => {
@@ -538,6 +585,8 @@ export default function DashboardPage() {
           setArticle3(data.article3_data);
           setMeetups(data.meetups_data ?? []);
           setEditorDay(data.editor_day ?? 1);
+          const tocHtml = (data.placeholders as Record<string, string>)?.['[[tableofcontents_placeholder]]'] ?? '';
+          setTocLines(parseTocHtml(tocHtml));
         } else {
           setError(String(data.error ?? 'No draft found'));
         }
@@ -571,6 +620,7 @@ export default function DashboardPage() {
           article3_data: article3,
           meetups_data: meetups,
           editor_day: editorDay,
+          toc_html: serializeTocLines(tocLines),
         }),
       });
       const updated = await res.json();
@@ -583,7 +633,7 @@ export default function DashboardPage() {
     } finally {
       setSaving(false);
     }
-  }, [draft, intro, selectedSubject, subjectOptions, preheader, fundingRows, sponsorActive, teknikActive, svepet, article1, article2, article3, meetups, editorDay]);
+  }, [draft, intro, selectedSubject, subjectOptions, preheader, fundingRows, sponsorActive, teknikActive, svepet, article1, article2, article3, meetups, editorDay, tocLines]);
 
   const [editUrlGratis, setEditUrlGratis] = useState('');
   const [editUrlBetalande, setEditUrlBetalande] = useState('');
@@ -772,6 +822,11 @@ export default function DashboardPage() {
             onChange={(e) => setIntro(e.target.value)}
             placeholder="AI-generated introduction – edit as needed..."
           />
+        </Section>
+
+        {/* ─── Innehållsförteckning ─── */}
+        <Section title="Table of contents">
+          <TocEditor lines={tocLines} onChange={setTocLines} />
         </Section>
 
         {/* ─── Redaktör ─── */}

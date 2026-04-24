@@ -62,6 +62,9 @@ export async function PATCH(
     }
   }
 
+  // toc_html kan skickas separat för att spara redigerad innehållsförteckning
+  const tocHtmlOverride: string | null = 'toc_html' in body ? (body.toc_html as string) : null;
+
   // Bygg om placeholders om något innehållsmässigt ändrats
   const needsRebuild = directFields.some(
     (f) => f in body && f !== 'subject' && f !== 'status'
@@ -114,8 +117,14 @@ export async function PATCH(
       '[[psarticletitle_placeholder]]': saved['[[psarticletitle_placeholder]]'] || rebuilt['[[psarticletitle_placeholder]]'],
       '[[psarticlelink_placeholder]]': saved['[[psarticlelink_placeholder]]'] || rebuilt['[[psarticlelink_placeholder]]'],
       '[[psarticleimage_placeholder]]': saved['[[psarticleimage_placeholder]]'] || rebuilt['[[psarticleimage_placeholder]]'],
-      // TOC-etiketter genereras av Claude vid collect – bevara dem vid PATCH
-      '[[tableofcontents_placeholder]]': saved['[[tableofcontents_placeholder]]'] || rebuilt['[[tableofcontents_placeholder]]'],
+      // TOC: manuell override vinner, annars bevara sparat, annars auto-byggt
+      '[[tableofcontents_placeholder]]': tocHtmlOverride ?? saved['[[tableofcontents_placeholder]]'] ?? rebuilt['[[tableofcontents_placeholder]]'],
+    };
+  } else if (tocHtmlOverride !== null) {
+    // Bara TOC har ändrats – uppdatera utan full rebuild
+    updates.placeholders = {
+      ...(existing.placeholders as Record<string, string>),
+      '[[tableofcontents_placeholder]]': tocHtmlOverride,
     };
   }
 
