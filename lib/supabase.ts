@@ -2,6 +2,7 @@
 // Supabase-klient (server-side, använder secret key)
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import type { FundingRow } from './funding';
 
 // Lazy-init: klienten skapas inte vid modulimport utan vid första anrop.
 // Förhindrar att Vercel-bygget kraschar om env-variabler saknas.
@@ -37,6 +38,7 @@ export interface NewsletterDraft {
   // Redigerbara fält (sparade separat för enkel åtkomst i dashboard)
   intro: string;
   funding_text: string;
+  funding_rows: FundingRow[] | null;
   is_betalande: boolean;
   sponsor_active: boolean;
   teknik_active: boolean;

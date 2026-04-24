@@ -267,7 +267,7 @@ async function swapArticleInDraft(
     article3: merged.article3_data ?? undefined,
     svepet: merged.svepet_data,
     tocLabels: undefined,
-    fundingText: merged.funding_text,
+    fundingRows: merged.funding_rows ?? [],
     isBetalande: merged.is_betalande,
     mostRead: [],
     psArticle: undefined,

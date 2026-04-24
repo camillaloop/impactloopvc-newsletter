@@ -41,6 +41,7 @@ export async function PATCH(
     'subject',
     'intro',
     'funding_text',
+    'funding_rows',
     'is_betalande',
     'sponsor_active',
     'teknik_active',
@@ -91,7 +92,7 @@ export async function PATCH(
       article2: merged.article2_data,
       article3: merged.article3_data ?? undefined,
       svepet: merged.svepet_data,
-      fundingText: merged.funding_text,
+      fundingRows: merged.funding_rows ?? [],
       isBetalande: merged.is_betalande,
       mostRead: [], // inte ändras via PATCH
       psArticle: undefined,

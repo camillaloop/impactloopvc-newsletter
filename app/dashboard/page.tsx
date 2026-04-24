@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { NewsletterDraft, ArticleData, SvepetData, MeetupData } from '@/lib/supabase';
+import type { FundingRow } from '@/lib/funding';
 
 // ─── Redaktörer ───────────────────────────────────────────────────────────────
 
@@ -314,6 +315,128 @@ function MeetupsEditor({
   );
 }
 
+// ─── Funding-editor ───────────────────────────────────────────────────────────
+
+const NICHE_OPTIONS = [
+  'Agritech', 'Foodtech', 'Clean Energy', 'Cleantech', 'Mobility',
+  'Circular Economy', 'Climate', 'Nature', 'Biotech', 'Industrial',
+];
+
+const EMPTY_FUNDING_ROW: FundingRow = {
+  company: '',
+  whatTheyDo: '',
+  niche: 'Cleantech',
+  funding: '',
+  investors: '',
+  location: '🌍',
+};
+
+function FundingEditor({
+  rows,
+  onChange,
+}: {
+  rows: FundingRow[];
+  onChange: (r: FundingRow[]) => void;
+}) {
+  const add = () => onChange([...rows, { ...EMPTY_FUNDING_ROW }]);
+  const remove = (i: number) => onChange(rows.filter((_, idx) => idx !== i));
+  const update = (i: number, field: keyof FundingRow, val: string) => {
+    const updated = [...rows];
+    updated[i] = { ...updated[i], [field]: val };
+    onChange(updated);
+  };
+
+  return (
+    <div className="space-y-3">
+      {rows.length === 0 && (
+        <p className="text-sm text-gray-400 italic">
+          No funding rounds – click "+ Add row" to add one manually, or they will be fetched automatically next collect.
+        </p>
+      )}
+      {rows.map((row, i) => (
+        <div key={i} className="border border-gray-100 rounded-lg p-3 space-y-2 bg-gray-50/50">
+          <div className="flex justify-between items-center">
+            <p className="text-xs font-medium text-gray-500">#{i + 1}</p>
+            <button
+              onClick={() => remove(i)}
+              className="text-xs text-red-500 hover:text-red-700"
+            >
+              Remove
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label>Company</Label>
+              <input
+                className="input"
+                value={row.company}
+                onChange={(e) => update(i, 'company', e.target.value)}
+                placeholder="Nox Mobility"
+              />
+            </div>
+            <div>
+              <Label>What they do (max 6 words)</Label>
+              <input
+                className="input"
+                value={row.whatTheyDo}
+                onChange={(e) => update(i, 'whatTheyDo', e.target.value)}
+                placeholder="Private sleeper cabins for night trains"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <Label>Niche</Label>
+              <select
+                className="input"
+                value={row.niche}
+                onChange={(e) => update(i, 'niche', e.target.value)}
+              >
+                {NICHE_OPTIONS.map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <Label>Funding (e.g. €15m)</Label>
+              <input
+                className="input"
+                value={row.funding}
+                onChange={(e) => update(i, 'funding', e.target.value)}
+                placeholder="€2M"
+              />
+            </div>
+            <div>
+              <Label>Location (flag emoji)</Label>
+              <input
+                className="input"
+                value={row.location}
+                onChange={(e) => update(i, 'location', e.target.value)}
+                placeholder="🇩🇪"
+              />
+            </div>
+          </div>
+          <div>
+            <Label>Investors</Label>
+            <input
+              className="input"
+              value={row.investors}
+              onChange={(e) => update(i, 'investors', e.target.value)}
+              placeholder="IBB Ventures, N/A"
+            />
+          </div>
+        </div>
+      ))}
+      <button
+        onClick={add}
+        className="w-full py-2 border-2 border-dashed border-gray-200 rounded-lg text-sm text-gray-400 hover:border-green-300 hover:text-green-600 transition-colors"
+      >
+        + Add row
+      </button>
+    </div>
+  );
+}
+
 // ─── Mest läst ────────────────────────────────────────────────────────────────
 
 function MostReadSection({ draft }: { draft: NewsletterDraft | null }) {
@@ -374,7 +497,7 @@ export default function DashboardPage() {
   const [selectedSubject, setSelectedSubject] = useState(0);
   const [subjectOptions, setSubjectOptions] = useState<[string, string, string]>(['', '', '']);
   const [preheader, setPreheader] = useState('');
-  const [fundingText, setFundingText] = useState('');
+  const [fundingRows, setFundingRows] = useState<FundingRow[]>([]);
   const [sponsorActive, setSponsorActive] = useState(false);
   const [teknikActive, setTeknikActive] = useState(false);
   const [svepet, setSvepet] = useState<SvepetData>({
@@ -406,7 +529,7 @@ export default function DashboardPage() {
           setSelectedSubject(0);
           setSubjectOptions(data.subject_options ?? ['', '', '']);
           setPreheader(data.preheader ?? '');
-          setFundingText(data.funding_text ?? '');
+          setFundingRows(data.funding_rows ?? []);
           setSponsorActive(data.sponsor_active ?? false);
           setTeknikActive(data.teknik_active ?? false);
           if (data.svepet_data) setSvepet(data.svepet_data);
@@ -439,7 +562,7 @@ export default function DashboardPage() {
           subject: subjectOptions[selectedSubject],
       subject_options: subjectOptions,
           preheader,
-          funding_text: fundingText,
+          funding_rows: fundingRows,
           sponsor_active: sponsorActive,
           teknik_active: teknikActive,
           svepet_data: svepet,
@@ -460,7 +583,7 @@ export default function DashboardPage() {
     } finally {
       setSaving(false);
     }
-  }, [draft, intro, selectedSubject, subjectOptions, preheader, fundingText, sponsorActive, teknikActive, svepet, article1, article2, article3, meetups, editorDay]);
+  }, [draft, intro, selectedSubject, subjectOptions, preheader, fundingRows, sponsorActive, teknikActive, svepet, article1, article2, article3, meetups, editorDay]);
 
   const [editUrlGratis, setEditUrlGratis] = useState('');
   const [editUrlBetalande, setEditUrlBetalande] = useState('');
@@ -736,16 +859,8 @@ export default function DashboardPage() {
         </Section>
 
         {/* ─── Kapitalrundor ─── */}
-        <Section title="Funding rounds (Loopdesk data)">
-          <p className="text-xs text-gray-400 mb-2">
-            Paste HTML or plain text from Loopdesk. Leave blank if no rounds today.
-          </p>
-          <textarea
-            className="input min-h-[100px] font-mono text-xs resize-y"
-            value={fundingText}
-            onChange={(e) => setFundingText(e.target.value)}
-            placeholder="<p>Company X raised SEK 50m...</p>"
-          />
+        <Section title="Funding rounds">
+          <FundingEditor rows={fundingRows} onChange={setFundingRows} />
         </Section>
 
         {/* ─── Mest läst ─── */}

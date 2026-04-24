@@ -7,7 +7,7 @@ import { fetchMostRead } from './analytics';
 import { generateIntro, generateSubjectLines, generateImpactSvepet, generateTocLabels, buildPreheader } from './ai';
 import { fetchNewsFeed } from './news-feed';
 import { fetchMeetups } from './sheets';
-import { fetchFundingRounds, buildFundingTableHtml } from './funding';
+import { fetchFundingRounds } from './funding';
 import { buildPlaceholders } from './placeholders';
 import { getEditorForDate, EDITORS } from './editors';
 import { createDraft, getLatestPendingInstruction, markInstructionApplied } from './supabase';
@@ -100,7 +100,6 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
 
   console.log('[collect] mostRead:', mostRead.length, 'articles');
   console.log('[collect] funding rows:', fundingRows.length);
-  const fundingText = buildFundingTableHtml(fundingRows);
 
   // 3. Generera AI-innehåll parallellt
   console.log('[collect] Generating AI content...');
@@ -135,7 +134,7 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
     article3: article3 ?? undefined,
     svepet,
     tocLabels,
-    fundingText,
+    fundingRows,
     isBetalande: false,
     mostRead,
     psArticle,
@@ -157,7 +156,8 @@ export async function runCollect(mode: 'auto' | 'manual' = 'auto'): Promise<Coll
     preheader: buildPreheader(subjectOptions),
     placeholders,
     intro,
-    funding_text: fundingText,
+    funding_text: '',
+    funding_rows: fundingRows,
     is_betalande: false,
     sponsor_active: false,
     teknik_active: false,

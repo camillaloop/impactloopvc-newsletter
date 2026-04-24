@@ -8,6 +8,8 @@ import type { Editor } from './editors';
 import type { SvepetResult } from './ai';
 import type { SvepetData } from './supabase';
 import { buildSvepetHtml, buildFundingHtml, buildMeetupsHtml, buildPreheader } from './ai';
+import { buildFundingTableHtml } from './funding';
+import type { FundingRow } from './funding';
 import { buildMostReadHtml } from './analytics';
 
 export interface NewsletterDraftData {
@@ -29,7 +31,7 @@ export interface NewsletterDraftData {
   svepet: SvepetResult | SvepetData;
 
   // Kapitalrundor
-  fundingText: string; // HTML eller fritext
+  fundingRows: FundingRow[]; // structured rows → HTML built at send time
   isBetalande: boolean; // true = betalande segment
 
   // Mest läst
@@ -73,7 +75,7 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
     article2,
     article3,
     svepet,
-    fundingText,
+    fundingRows,
     isBetalande,
     mostRead,
     psArticle,
@@ -102,8 +104,9 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
   // Impact-svepet
   const svepetHtml = buildSvepetHtml(svepet);
 
-  // Funding rounds
-  const fundingHtml = buildFundingHtml(fundingText, isBetalande);
+  // Funding rounds: build HTML from structured rows, then apply free/paid logic
+  const fundingTableHtml = buildFundingTableHtml(fundingRows);
+  const fundingHtml = buildFundingHtml(fundingTableHtml, isBetalande);
 
   // Mest läst
   const mostReadHtml = buildMostReadHtml(mostRead);

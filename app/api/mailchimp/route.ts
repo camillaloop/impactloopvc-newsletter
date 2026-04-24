@@ -96,7 +96,7 @@ export async function POST(req: Request) {
       article2: draft.article2_data,
       article3: draft.article3_data ?? undefined,
       svepet: draft.svepet_data,
-      fundingText: draft.funding_text,
+      fundingRows: draft.funding_rows ?? [],
       isBetalande,
       mostRead: [], // fylls på nedan från sparade placeholders
       psArticle: undefined, // fylls på nedan från sparade placeholders
