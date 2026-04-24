@@ -73,14 +73,16 @@ ${examplesBlock}
 Today's articles in the newsletter:
 ${articleSummary}
 
-Write an introduction of 2–4 sentences in the first person. Warm, personal and journalistic tone. No hashtags, no lists. Mention 1–2 of the articles without quoting their titles directly. Do NOT end with "Happy reading" or similar – the editor adds that themselves. Do NOT use en-dashes (–) in the text – they do not suit this style. Reply ONLY with the introduction, no explanation.`,
+Write an introduction of 2–4 sentences in the first person. Warm, personal and journalistic tone. No hashtags, no lists. Mention 1–2 of the articles without quoting their titles directly. Do NOT end with "Happy reading" or similar – the editor adds that themselves. Do NOT use en-dashes (–) in the text – they do not suit this style. You may use ONE single emoji at the very start (e.g. ☕) – never more than one emoji total in the whole intro. Reply ONLY with the introduction, no explanation.`,
       },
     ],
   });
 
   const text = msg.content[0];
   if (text.type !== 'text') throw new Error('Unexpected response from Claude');
-  return text.text.trim();
+  // Remove consecutive duplicate emojis (e.g. ☕☕ → ☕)
+  const cleaned = text.text.trim().replace(/([\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}])\1+/gu, '$1');
+  return cleaned;
 }
 
 // ─── Ämnesrader ───────────────────────────────────────────────────────────────
@@ -194,14 +196,14 @@ ${examplesBlock}
 Today's articles:
 ${articleSummary}
 
-Generate exactly 3 subject lines in Impact Loop VC's style. Rules:
-- Start with a relevant emoji
+Generate exactly 3 subject lines in Impact Loop VC's style — one subject line per article, in the same order as the articles above. Rules:
+- Subject line 1 is based on article 1, subject line 2 on article 2, subject line 3 on article 3
+- Start each with a relevant emoji
 - Maximum 65 characters per line
 - Concrete and curiosity-inducing
-- FORBIDDEN: invented phrases, words or expressions not found in the articles
-- Vary the style: one with a figure/fact, one with contrast or paradox, one more narrative
-- In English, name companies/individuals where relevant to the article
-- Use ONLY information that actually appears in the article texts above
+- FORBIDDEN: invented phrases, words or expressions not found in the article it is based on
+- In English, name companies/individuals where relevant
+- Use ONLY information that actually appears in each article's text
 
 Reply ONLY with the 3 subject lines, one per line, without numbering or explanation.`,
       },
@@ -303,7 +305,7 @@ PRIORITISE (in order):
 2. Well-known international companies with relevant sector news
 3. EU/policy with direct consequences for European companies and investors
 
-EXCLUDE: general politics without an impact/sustainability angle, large listed companies without a sustainability angle, natural disasters without market relevance, lifestyle advice. ALSO EXCLUDE: press releases that are merely certification announcements, labelling notices or similar without a concrete business story (new product, new service, new investment, new partnership, new study with figures).
+EXCLUDE: funding rounds, venture capital raises, investments or financing news of any kind (these go in the separate "Investor funding brief" section). Also exclude: general politics without an impact/sustainability angle, large listed companies without a sustainability angle, natural disasters without market relevance, lifestyle advice. ALSO EXCLUDE: press releases that are merely certification announcements, labelling notices or similar without a concrete business story (new product, new service, new partnership, new study with figures).
 
 International news is only relevant if it concerns a specific well-known company, a report with concrete figures, or a trend that directly affects European investors/startups.
 
@@ -388,7 +390,10 @@ export function buildSvepetHtml(svepet: SvepetResult): string {
     return `<p${pClass}><strong>${item.emoji} ${item.boldTitle}.</strong> ${body}</p>`;
   }
 
-  return `<tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="727" class="mceText" id="dataBlockId-727" style="width:100%"><p class="last-child"><span style="color:#e2baba;">BITS AND PIECES</span></p></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="801" class="mceText" id="dataBlockId-801" style="width:100%"><h1 class="last-child">${headline} \u2013 3 things to keep you in the loop today</h1></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="721" class="mceText" id="dataBlockId-721" style="width:100%">${renderItem(item1, false)}<p><br></p>${renderItem(item2, false)}<p><br></p>${renderItem(item3, true)}</div></td></tr></tbody></table></td></tr><tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:24px;padding-left:24px" class="mceBlockContainer" valign="top"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" role="presentation" class="mceDividerContainer" data-block-id="709"> <tbody><tr><td style="min-width:100%;border-top-width:1px;border-top-style:solid;border-top-color:#e5e6d2" class="mceDividerBlock" valign="top"></td></tr></tbody></table></td></tr>`;
+  // Headline = first item's boldTitle (e.g. "Verda raises $117M for clean AI cloud")
+  const displayHeadline = item1.boldTitle || headline;
+
+  return `<tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="727" class="mceText" id="dataBlockId-727" style="width:100%"><p class="last-child"><span style="color:#d0c4de;">BITS AND PIECES</span></p></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="801" class="mceText" id="dataBlockId-801" style="width:100%"><h1 class="last-child">${displayHeadline} \u2013 3 things to keep you in the loop today</h1></div></td></tr></tbody></table></td></tr><tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top"><table width="100%" style="border:0;border-radius:0;border-collapse:separate"><tbody><tr><td style="padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class="mceTextBlockContainer"><div data-block-id="721" class="mceText" id="dataBlockId-721" style="width:100%">${renderItem(item1, false)}<p><br></p>${renderItem(item2, false)}<p><br></p>${renderItem(item3, true)}</div></td></tr></tbody></table></td></tr><tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:24px;padding-left:24px" class="mceBlockContainer" valign="top"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" role="presentation" class="mceDividerContainer" data-block-id="709"> <tbody><tr><td style="min-width:100%;border-top-width:1px;border-top-style:solid;border-top-color:#e5e6d2" class="mceDividerBlock" valign="top"></td></tr></tbody></table></td></tr>`;
 }
 
 // ─── HTML-builder för funding rounds ─────────────────────────────────────────

@@ -28,27 +28,25 @@ export async function fetchFundingRounds(): Promise<FundingRow[]> {
   const articles: Array<{ title: string; description: string; date: string }> =
     data.articles ?? data ?? [];
 
-  // Try last 2 days first, fallback to 3 days
-  let cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - 2);
-  let recent = articles.filter((a) => new Date(a.date) >= cutoff);
-
-  if (!recent.length) {
-    cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - 3);
+  // Try progressively wider date windows until we have enough raw articles
+  let recent: typeof articles = [];
+  for (const days of [3, 7, 14]) {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
     recent = articles.filter((a) => new Date(a.date) >= cutoff);
-    console.log(`[funding] No articles in last 2 days, trying 3 days: ${recent.length} found`);
-  } else {
-    console.log(`[funding] ${recent.length} articles from last 2 days`);
+    console.log(`[funding] ${recent.length} articles in last ${days} days`);
+    if (recent.length >= 7) break;
   }
 
   if (!recent.length) return [];
 
-  // Sort newest first
+  // Sort newest first — pass up to 20 to Claude so it has enough to pick 7 qualifying ones
   recent.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  recent = recent.slice(0, 20);
 
-  // Use Claude to extract structured data (impact/sustainability only)
-  return extractFundingRows(recent);
+  // Use Claude to extract structured data (impact/sustainability only), then cap at 7
+  const rows = await extractFundingRows(recent);
+  return rows.slice(0, 7);
 }
 
 // ─── AI extraction ────────────────────────────────────────────────────────────
@@ -185,7 +183,7 @@ export function buildFundingTableHtml(rows: FundingRow[]): string {
           <tr>
             <td style="padding-left:24px;padding-right:24px;padding-top:0;padding-bottom:6px" class="mceTextBlockContainer">
               <div class="mceText" style="width:100%">
-                <p class="last-child"><span style="color:#e2baba;">€€€</span></p>
+                <p class="last-child"><span style="color:#d0c4de;">€€€</span></p>
               </div>
             </td>
           </tr>

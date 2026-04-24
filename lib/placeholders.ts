@@ -132,8 +132,8 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
     '[[editorimage_placeholder]]': editor.imageUrl,
     '[[intro_placeholder]]': intro
       .replace(/\n/g, '<br>')
-      .replace(/^Godmorgon!/, '<strong>Godmorgon!</strong> ☕')
-      .replace(/^Good morning!/, '<strong>Good morning!</strong> ☕'),
+      .replace(/^Godmorgon!/, '<strong>Godmorgon!</strong>')
+      .replace(/^Good morning!/, '<strong>Good morning!</strong>'),
 
     // Sponsor / teknik
     '[[sponsor_placeholder]]': sponsorHtml,
@@ -256,7 +256,7 @@ function buildArticle3Html(article: SanityArticle): string {
                                 id="dataBlockId-747"
                                 style="width:100%">
                                 <p class="last-child">
-                                    <span style="color:#e2baba;text-transform:uppercase;">${article.category}</span>
+                                    <span style="color:#d0c4de;text-transform:uppercase;">${article.category}</span>
                                 </p>
                             </div>
                         </td>
