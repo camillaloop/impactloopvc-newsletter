@@ -3,39 +3,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { NewsletterDraft, ArticleData, SvepetData, MeetupData } from '@/lib/supabase';
 import type { FundingRow } from '@/lib/funding';
+import { EDITORS } from '@/lib/editors';
 
 // ─── Redaktörer ───────────────────────────────────────────────────────────────
 
-const EDITORS_LIST = [
-  {
-    day: 1,
-    name: 'Siôn Geschwindt',
-    email: 'sion@loop.se',
-    title: 'Managing editor, Impact Loop VC',
-    imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
-  },
-  {
-    day: 2,
-    name: 'Siôn Geschwindt',
-    email: 'sion@loop.se',
-    title: 'Managing editor, Impact Loop VC',
-    imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
-  },
-  {
-    day: 3,
-    name: 'Siôn Geschwindt',
-    email: 'sion@loop.se',
-    title: 'Managing editor, Impact Loop VC',
-    imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
-  },
-  {
-    day: 4,
-    name: 'Siôn Geschwindt',
-    email: 'sion@loop.se',
-    title: 'Managing editor, Impact Loop VC',
-    imageUrl: 'https://cdn.sanity.io/images/dez2j7lq/production/2177d94b74f63751498092d4086f9e059c2a694c-500x500.png?w=1800&h=1200',
-  },
-] as const;
+const EDITORS_LIST = Object.entries(EDITORS).map(([day, editor]) => ({
+  day: Number(day),
+  ...editor,
+}));
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -853,7 +828,7 @@ export default function DashboardPage() {
                     >
                       {EDITORS_LIST.map((e) => (
                         <option key={e.day} value={e.day}>
-                          {e.name}
+                          {['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'][e.day]} – {e.name}
                         </option>
                       ))}
                     </select>
