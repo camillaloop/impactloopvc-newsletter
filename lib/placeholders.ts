@@ -179,7 +179,7 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
     '[[headline1_placeholder]]': article1.title,
     '[[articleimage1_placeholder]]': article1.mainImageUrl,
     '[[imagetext1_placeholder]]': article1.imageCaption,
-    '[[ingress1_placeholder]]': article1.ingress,
+    '[[ingress1_placeholder]]': formatIngress(article1.ingress),
     '[[readinglink1_placeholder]]': article1.url,
     '[[category1_placeholder]]': article1.category,
 
@@ -187,7 +187,7 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
     '[[headline2_placeholder]]': article2.title,
     '[[articleimage2_placeholder]]': article2.mainImageUrl,
     '[[imagetext2_placeholder]]': article2.imageCaption,
-    '[[ingress2_placeholder]]': article2.ingress,
+    '[[ingress2_placeholder]]': formatIngress(article2.ingress),
     '[[readinglink2_placeholder]]': article2.url,
     '[[category2_placeholder]]': article2.category,
 
@@ -218,6 +218,18 @@ export function buildPlaceholders(data: NewsletterDraftData): PlaceholderMap {
 }
 
 // ─── Hjälpfunktioner ──────────────────────────────────────────────────────────
+
+/**
+ * Konverterar \n\n till dubbelt radavstånd (tomt stycke emellan)
+ * och \n till enkelt radavstånd (<br>).
+ * Bibehåller bold-formateringen runt varje stycke.
+ */
+function formatIngress(text: string): string {
+  return text
+    .split('\n\n')
+    .map(para => para.replace(/\n/g, '<br>'))
+    .join('</strong></p><p><br></p><p><strong>');
+}
 
 // Emojis att rotera för artiklar (väljs baserat på kategori eller index)
 const ARTICLE_EMOJIS = ['📣', '👁️', '💡', '🔍', '📊', '🌍', '⚡', '🏭', '💰', '🌱'];
@@ -372,7 +384,7 @@ function buildArticle3Html(article: SanityArticle): string {
                                 class="mceText"
                                 id="dataBlockId-751"
                                 style="width:100%">
-                                <p><strong>${article.ingress}</strong></p><br>
+                                <p><strong>${formatIngress(article.ingress)}</strong></p><br>
                                 <p class="last-child">
                                     <a href="${article.url}" target="_blank"><strong>Read the article here ---&gt;</strong></a>
                                 </p>
