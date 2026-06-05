@@ -472,7 +472,7 @@ export const NEWSLETTER_HTML_TEMPLATE = `<!DOCTYPE html><html xmlns="http://www.
 
                   <span style="font-size: 12px"> or </span>
 
-                  <a href="https://impactloop.us21.list-manage.com/unsubscribe?u=46f8b3dcdd581118cad2f80ee&id=2575eb3724&t=b&e=[UNIQID]&c=fe99aba8f5"><span style="font-size: 12px">unsubscribe</span></a>
+                  <a href="*|UNSUB|*"><span style="font-size: 12px">unsubscribe</span></a>
 
                   <span style="font-size: 12px"> completely whenever you like.</span>
                 </p>

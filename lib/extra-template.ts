@@ -213,7 +213,7 @@ ${imageCaption ? `
 <span style="font-size:12px">Want to change how you receive these emails?</span><br>
 <span style="font-size:12px">You can </span><a href="https://impactloop.mailchimpsites.com/manage/preferences?u=46f8b3dcdd581118cad2f80ee&id=2575eb3724&e=[UNIQID]&c=a626e25f44"><span style="font-size:12px">update your preferences</span></a>
 <span style="font-size:12px"> or </span>
-<a href="https://impactloop.us21.list-manage.com/unsubscribe?u=46f8b3dcdd581118cad2f80ee&id=2575eb3724&t=b&e=[UNIQID]&c=a626e25f44"><span style="font-size:12px">unsubscribe</span></a>
+<a href="*|UNSUB|*"><span style="font-size:12px">unsubscribe</span></a>
 </p>
 </div>
 </td></tr>
