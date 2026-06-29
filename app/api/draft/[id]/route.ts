@@ -114,9 +114,9 @@ export async function PATCH(
       ...rebuilt,
       // Dessa byggs vid collect-tillfället och ska aldrig skrivas över vid PATCH
       '[[mostread_placeholder]]': saved['[[mostread_placeholder]]'] || rebuilt['[[mostread_placeholder]]'],
-      '[[psarticletitle_placeholder]]': saved['[[psarticletitle_placeholder]]'] || rebuilt['[[psarticletitle_placeholder]]'],
-      '[[psarticlelink_placeholder]]': saved['[[psarticlelink_placeholder]]'] || rebuilt['[[psarticlelink_placeholder]]'],
-      '[[psarticleimage_placeholder]]': saved['[[psarticleimage_placeholder]]'] || rebuilt['[[psarticleimage_placeholder]]'],
+      '[[psarticletitle_placeholder]]': body.ps_article_title ?? saved['[[psarticletitle_placeholder]]'] ?? rebuilt['[[psarticletitle_placeholder]]'],
+      '[[psarticlelink_placeholder]]': body.ps_article_link ?? saved['[[psarticlelink_placeholder]]'] ?? rebuilt['[[psarticlelink_placeholder]]'],
+      '[[psarticleimage_placeholder]]': body.ps_article_image ?? saved['[[psarticleimage_placeholder]]'] ?? rebuilt['[[psarticleimage_placeholder]]'],
       // TOC: manuell override vinner, annars bevara sparat, annars auto-byggt
       '[[tableofcontents_placeholder]]': tocHtmlOverride ?? saved['[[tableofcontents_placeholder]]'] ?? rebuilt['[[tableofcontents_placeholder]]'],
     };

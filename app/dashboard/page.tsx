@@ -508,7 +508,7 @@ export default function DashboardPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [swapTarget, setSwapTarget] = useState<'article1' | 'article2' | 'article3' | null>(null);
+  const [swapTarget, setSwapTarget] = useState<'article1' | 'article2' | 'article3' | 'article4' | null>(null);
   const [testEmail, setTestEmail] = useState('');
   const [segment, setSegment] = useState<'gratis' | 'betalande'>('gratis');
   const [sending, setSending] = useState(false);
@@ -532,6 +532,7 @@ export default function DashboardPage() {
   const [article1, setArticle1] = useState<ArticleData | null>(null);
   const [article2, setArticle2] = useState<ArticleData | null>(null);
   const [article3, setArticle3] = useState<ArticleData | null>(null);
+  const [article4, setArticle4] = useState<ArticleData | null>(null);
   const [meetups, setMeetups] = useState<MeetupData[]>([]);
   const [editorDay, setEditorDay] = useState<number>(1);
   const [tocLines, setTocLines] = useState<string[]>([]);
@@ -560,8 +561,15 @@ export default function DashboardPage() {
           setArticle3(data.article3_data);
           setMeetups(data.meetups_data ?? []);
           setEditorDay(data.editor_day ?? 1);
-          const tocHtml = (data.placeholders as Record<string, string>)?.['[[tableofcontents_placeholder]]'] ?? '';
+          const placeholders = (data.placeholders as Record<string, string>) ?? {};
+          const tocHtml = placeholders['[[tableofcontents_placeholder]]'] ?? '';
           setTocLines(parseTocHtml(tocHtml));
+          const psTitle = placeholders['[[psarticletitle_placeholder]]'];
+          const psLink = placeholders['[[psarticlelink_placeholder]]'];
+          const psImage = placeholders['[[psarticleimage_placeholder]]'];
+          if (psTitle && psLink) {
+            setArticle4({ _id: '', title: psTitle, ingress: '', mainImageUrl: psImage ?? '', imageCaption: '', category: 'PS', url: psLink, slug: '', publishedAt: '' });
+          }
         } else {
           setError(String(data.error ?? 'No draft found'));
         }
@@ -593,6 +601,9 @@ export default function DashboardPage() {
           article1_data: article1,
           article2_data: article2,
           article3_data: article3,
+          ps_article_title: article4?.title ?? '',
+          ps_article_link: article4?.url ?? '',
+          ps_article_image: article4?.mainImageUrl ?? '',
           meetups_data: meetups,
           editor_day: editorDay,
           toc_html: serializeTocLines(tocLines),
@@ -851,7 +862,7 @@ export default function DashboardPage() {
 
         {/* ─── Artiklar ─── */}
         <Section title="Articles">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {article1 && (
               <ArticleCard
                 label="Article 1"
@@ -878,6 +889,20 @@ export default function DashboardPage() {
                 className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-sm text-gray-400 hover:border-green-300 hover:text-green-600 transition-colors text-center"
               >
                 + Add third article
+              </button>
+            )}
+            {article4 ? (
+              <ArticleCard
+                label="Article 4 (PS)"
+                article={article4}
+                onSwap={() => setSwapTarget('article4')}
+              />
+            ) : (
+              <button
+                onClick={() => setSwapTarget('article4')}
+                className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-sm text-gray-400 hover:border-green-300 hover:text-green-600 transition-colors text-center"
+              >
+                + Add PS article
               </button>
             )}
           </div>
@@ -1006,6 +1031,7 @@ export default function DashboardPage() {
             if (swapTarget === 'article1') setArticle1(article);
             if (swapTarget === 'article2') setArticle2(article);
             if (swapTarget === 'article3') setArticle3(article);
+            if (swapTarget === 'article4') setArticle4(article);
             setSwapTarget(null);
           }}
           onClose={() => setSwapTarget(null)}
