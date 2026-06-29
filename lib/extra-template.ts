@@ -87,9 +87,9 @@ body, #bodyTable { background-color: rgb(244, 244, 244); }
 <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation"><tbody><tr>
 <td style="padding-top:0;padding-bottom:0" valign="top" colspan="12" width="100%">
 <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation"><tbody><tr>
-<td style="background-color:#e5ff00;padding-top:12px;padding-bottom:12px;padding-right:48px;padding-left:48px" valign="top" align="left">
+<td style="background-color:#d0c4de;padding-top:12px;padding-bottom:12px;padding-right:48px;padding-left:48px" valign="top" align="left">
 <a href="http://www.impactloop.se" style="display:block" target="_blank">
-<img alt="Logo" src="https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/64d23c33-4124-2e95-27c9-a488186b43a8.png" width="103" height="auto" style="display:block;max-width:100%;height:auto;">
+<img alt="Logo" src="https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/58bd14de-b4e1-9d00-d5c3-000ff044d786.png" width="103" height="auto" style="display:block;max-width:100%;height:auto;">
 </a>
 </td></tr></tbody></table>
 </td></tr></tbody></table>
@@ -173,7 +173,7 @@ ${imageCaption ? `
 </td></tr>
 
 <!-- SOCIAL FOOTER (gul) -->
-<tr><td style="background-color:#e5ff00;padding-top:32px;padding-bottom:12px;padding-right:0;padding-left:0" valign="top">
+<tr><td style="background-color:#d0c4de;padding-top:32px;padding-bottom:12px;padding-right:0;padding-left:0" valign="top">
 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
 <tbody><tr><td valign="top" align="center">
 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"><tbody><tr>
@@ -200,12 +200,12 @@ ${imageCaption ? `
 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
 <tbody><tr><td valign="top">
 <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation"><tbody><tr>
-<td style="background-color:#e5ff00;padding:8px;" valign="top">
+<td style="background-color:#d0c4de;padding:8px;" valign="top">
 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
 <tbody><tr><td valign="top">
 <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation"><tbody>
 <tr><td style="padding:12px 48px" valign="top" align="center">
-<img alt="Logo" src="https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/64d23c33-4124-2e95-27c9-a488186b43a8.png" width="97" height="auto" style="display:block;max-width:100%;height:auto;">
+<img alt="Logo" src="https://mcusercontent.com/46f8b3dcdd581118cad2f80ee/images/58bd14de-b4e1-9d00-d5c3-000ff044d786.png" width="97" height="auto" style="display:block;max-width:100%;height:auto;">
 </td></tr>
 <tr><td style="padding:12px 16px" valign="top" align="center">
 <div class="mceText" id="d18" style="display:inline-block;width:100%">
