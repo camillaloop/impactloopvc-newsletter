@@ -175,15 +175,26 @@ function SvepetEditor({
   data: SvepetData;
   onChange: (d: SvepetData) => void;
 }) {
+  const item1BoldTitle = data.items[0]?.boldTitle ?? '';
+  const headlineIsDefault = data.headline === item1BoldTitle || data.headline === '';
+
   return (
     <div className="space-y-4">
       <div>
         <Label>Headline (entire roundup)</Label>
         <input
           className="input"
-          value={data.headline}
+          value={headlineIsDefault ? item1BoldTitle : data.headline}
           onChange={(e) => onChange({ ...data, headline: e.target.value })}
         />
+        {!headlineIsDefault && (
+          <button
+            className="text-xs text-gray-400 hover:text-gray-600 mt-1"
+            onClick={() => onChange({ ...data, headline: item1BoldTitle })}
+          >
+            ↺ Reset to item 1 headline
+          </button>
+        )}
       </div>
       {data.items.map((item, i) => (
         <div key={i} className="border border-gray-100 rounded-lg p-3 space-y-2">
