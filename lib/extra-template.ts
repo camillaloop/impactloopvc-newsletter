@@ -177,10 +177,7 @@ ${imageCaption ? `
 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
 <tbody><tr><td valign="top" align="center">
 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"><tbody><tr>
-<td style="padding:3px 12px" valign="top" align="center" width="24"><a href="https://www.facebook.com/impactloop.se/" target="_blank"><img width="24" height="24" alt="Facebook" src="https://cdn-images.mailchimp.com/icons/social-block-v3/block-icons-v3/facebook-filled-dark-40.png"></a></td>
-<td style="padding:3px 12px" valign="top" align="center" width="24"><a href="https://www.instagram.com/impactloop.se/" target="_blank"><img width="24" height="24" alt="Instagram" src="https://cdn-images.mailchimp.com/icons/social-block-v3/block-icons-v3/instagram-filled-dark-40.png"></a></td>
-<td style="padding:3px 12px" valign="top" align="center" width="24"><a href="https://se.linkedin.com/company/impact-loop-loop" target="_blank"><img width="24" height="24" alt="LinkedIn" src="https://cdn-images.mailchimp.com/icons/social-block-v3/block-icons-v3/linkedin-filled-dark-40.png"></a></td>
-<td style="padding:3px 12px" valign="top" align="center" width="24"><a href="https://www.threads.net/@impactloop.se" target="_blank"><img width="24" height="24" alt="Threads" src="https://cdn-images.mailchimp.com/icons/social-block-v3/block-icons-v3/threads-filled-dark-40.png"></a></td>
+<td style="padding:3px 12px" valign="top" align="center" width="24"><a href="https://www.linkedin.com/company/impact-loop-europe" target="_blank"><img width="24" height="24" alt="LinkedIn" src="https://cdn-images.mailchimp.com/icons/social-block-v3/block-icons-v3/linkedin-filled-dark-40.png"></a></td>
 </tr></tbody></table>
 </td></tr></tbody></table>
 </td></tr>
