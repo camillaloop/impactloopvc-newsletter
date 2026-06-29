@@ -54,8 +54,11 @@ function verifySlackSignature(
 // ─── Svara i Slack-tråden ─────────────────────────────────────────────────────
 
 async function replyInThread(channel: string, threadTs: string, text: string) {
-  if (!SLACK_BOT_TOKEN) return;
-  await fetch('https://slack.com/api/chat.postMessage', {
+  if (!SLACK_BOT_TOKEN) {
+    console.error('[slack] replyInThread: SLACK_BOT_TOKEN saknas');
+    return;
+  }
+  const res = await fetch('https://slack.com/api/chat.postMessage', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
@@ -63,6 +66,12 @@ async function replyInThread(channel: string, threadTs: string, text: string) {
     },
     body: JSON.stringify({ channel, thread_ts: threadTs, text }),
   });
+  const json = await res.json();
+  if (!json.ok) {
+    console.error('[slack] replyInThread misslyckades:', json.error, { channel, threadTs });
+  } else {
+    console.log('[slack] replyInThread ok, channel:', channel, 'thread_ts:', threadTs);
+  }
 }
 
 // ─── Huvudhanterare ───────────────────────────────────────────────────────────
