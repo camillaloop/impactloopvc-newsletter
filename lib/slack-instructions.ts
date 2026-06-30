@@ -42,7 +42,7 @@ export async function parseInstruction(text: string): Promise<ParsedInstruction 
 
   const response = await client.messages.create({
     model: 'claude-opus-4-5',
-    max_tokens: 400,
+    max_tokens: 800,
     messages: [
       {
         role: 'user',
@@ -54,13 +54,15 @@ Article fragments are headlines or parts of article headlines — NOT personal n
 
 Extract these fields (omit fields not mentioned):
 - editorName: string — ONLY if one of the editors above is mentioned (use full name: "Siôn Geschwindt", "Camilla Bergman", or "Diana Demin")
-- articleFragments: string[] — parts of article headlines to use in the newsletter (1–3 items)
+- articleFragments: string[] — parts of article headlines to use in the newsletter (can be 1–4 items, include all mentioned)
 - psFragment: string — part of the PS article headline
-- svepHints: string[] — if the user wants the Impact Roundup to include a specific news item. Each hint is a brief description of the news/topic/company (e.g. "Northvolt", "Volvo EV batteries", "EU taxonomy"). Used when the instruction mentions the roundup or roundup news.
+- svepHints: string[] — if the user mentions news items for the "impact-svepet" or roundup section, extract ALL of them as separate array items. Each item is the full article title or description as given. Look for patterns like "impact-svepet kan handla om X, Y, Z" and extract X, Y, Z as three separate items. Include ALL items mentioned, not just the first one.
 - swapArticle: { position: 1|2|3, fragment: string } — if the user wants to SWAP OUT a specific article in an already-built newsletter. position 1 = top/first article, 2 = second, 3 = third. fragment = part of the new article headline.
 
 swapArticle is used ONLY when the instruction is about swapping out an article in an already-built newsletter (e.g. "swap the top article for X", "replace article 2 with Y", "change the first one to Z").
 articleFragments is used when building a new newsletter from scratch.
+
+IMPORTANT: For svepHints, include every single item the user listed — do not truncate or merge items. The items may have commas within a single title (e.g. "After backing Octopus Energy, Al Gore's impact fund closes $1bn vehicle" is ONE item).
 
 Return ONLY valid JSON. If the message is not about the newsletter, return null.
 
